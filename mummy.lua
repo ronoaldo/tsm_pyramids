@@ -7,8 +7,8 @@ local mummy_animation_speed = 10
 local mummy_animation_blend = 0
 
 -- Default player appearance
-local mummy_mesh = "pyramids_mummy.x"
-local mummy_texture = {"pyramids_mummy.png"}
+local mummy_mesh = "tsm_pyramids_mummy.x"
+local mummy_texture = {"tsm_pyramids_mummy.png"}
 local mummy_hp = 20
 local mummy_drop = "default:papyrus"
 
@@ -49,7 +49,7 @@ local ANIM_MINE = 6
 function hit(self)
 	prop = {
 		mesh = mummy_mesh,
-		textures = {"pyramids_mummy.png^pyramids_hit.png"},
+		textures = {"tsm_pyramids_mummy.png^tsm_pyramids_hit.png"},
 	}
 	self.object:set_properties(prop)
 	minetest.after(0.4, function()
@@ -120,7 +120,7 @@ spawner_DEF.on_step = function(self, dtime)
 	self.timer = self.timer + 0.01
 	local n = minetest.get_node_or_nil(self.object:getpos())
 	if self.timer > 1 then
-		if n and n.name and n.name ~= "pyramids:spawner_mummy" then
+		if n and n.name and n.name ~= "tsm_pyramids:spawner_mummy" then
 			self.object:remove()
 		end
 	end
@@ -334,20 +334,20 @@ MUMMY_DEF.on_step = function(self, dtime)
 	end
 end
 
-minetest.register_entity("pyramids:mummy", MUMMY_DEF)
-minetest.register_entity("pyramids:mummy_spawner", spawner_DEF)
+minetest.register_entity("tsm_pyramids:mummy", MUMMY_DEF)
+minetest.register_entity("tsm_pyramids:mummy_spawner", spawner_DEF)
 
 
 --spawn-egg/spawner
 
-minetest.register_craftitem("pyramids:spawn_egg", {
+minetest.register_craftitem("tsm_pyramids:spawn_egg", {
 	description = "Mummy spawn-egg",
-	inventory_image = "pyramids_mummy_egg.png",
+	inventory_image = "tsm_pyramids_mummy_egg.png",
 	liquids_pointable = false,
 	stack_max = 99,
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type == "node" then
-			minetest.env:add_entity(pointed_thing.above,"pyramids:mummy")
+			minetest.env:add_entity(pointed_thing.above,"tsm_pyramids:mummy")
 			if not minetest.setting_getbool("creative_mode") then itemstack:take_item() end
 			return itemstack
 		end
@@ -357,21 +357,21 @@ minetest.register_craftitem("pyramids:spawn_egg", {
 
 function pyramids.spawn_mummy (pos, number)
 	for i=0,number do
-		minetest.env:add_entity(pos,"pyramids:mummy")
+		minetest.env:add_entity(pos,"tsm_pyramids:mummy")
 	end
 end
 
-minetest.register_node("pyramids:spawner_mummy", {
+minetest.register_node("tsm_pyramids:spawner_mummy", {
 	description = "Mummy spawner",
 	paramtype = "light",
-	tiles = {"pyramids_spawner.png"},
+	tiles = {"tsm_pyramids_spawner.png"},
 	is_ground_content = true,
 	drawtype = "allfaces",--_optional",
 	groups = {cracky=1,level=1},
 	drop = "",
 	on_construct = function(pos)
 		pos.y = pos.y - 0.28
-		minetest.env:add_entity(pos,"pyramids:mummy_spawner")
+		minetest.env:add_entity(pos,"tsm_pyramids:mummy_spawner")
 	end,
 	on_destruct = function(pos)
 		for  _,obj in ipairs(minetest.env:get_objects_inside_radius(pos, 1)) do
@@ -385,7 +385,7 @@ minetest.register_node("pyramids:spawner_mummy", {
 })
 if not minetest.setting_getbool("only_peaceful_mobs") then
  minetest.register_abm({
-	nodenames = {"pyramids:spawner_mummy"},
+	nodenames = {"tsm_pyramids:spawner_mummy"},
 	interval = 2.0,
 	chance = 20,
 	action = function(pos, node, active_object_count, active_object_count_wider)
@@ -402,7 +402,7 @@ if not minetest.setting_getbool("only_peaceful_mobs") then
 			if mobs < spawner_max_mobs then
 				pos.x = pos.x+1
 				local p = minetest.find_node_near(pos, 5, {"air"})	
-				minetest.env:add_entity(p,"pyramids:mummy")
+				minetest.env:add_entity(p,"tsm_pyramids:mummy")
 			end
 		end
 	end

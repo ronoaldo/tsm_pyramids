@@ -1,8 +1,8 @@
 pyramids = {}
 
-dofile(minetest.get_modpath("pyramids").."/mummy.lua")
-dofile(minetest.get_modpath("pyramids").."/nodes.lua")
-dofile(minetest.get_modpath("pyramids").."/room.lua")
+dofile(minetest.get_modpath("tsm_pyramids").."/mummy.lua")
+dofile(minetest.get_modpath("tsm_pyramids").."/nodes.lua")
+dofile(minetest.get_modpath("tsm_pyramids").."/room.lua")
 
 local chest_stuff = {
 	{name="default:apple", max = 3},
@@ -36,7 +36,7 @@ function pyramids.fill_chest(pos)
 end
 
 local function add_spawner(pos)
-	minetest.set_node(pos, {name="pyramids:spawner_mummy"})
+	minetest.set_node(pos, {name="tsm_pyramids:spawner_mummy"})
 	if not minetest.setting_getbool("only_peaceful_mobs") then pyramids.spawn_mummy({x=pos.x,y=pos.y,z=pos.z-2},2) end
 end
 

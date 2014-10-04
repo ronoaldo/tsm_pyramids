@@ -1,9 +1,9 @@
 local img = {"eye", "men", "sun"}
 
 for i=1,3 do
-	minetest.register_node("pyramids:deco_stone"..i, {
+	minetest.register_node("tsm_pyramids:deco_stone"..i, {
 		description = "Sandstone with "..img[i],
-		tiles = {"default_sandstone.png^pyramids_"..img[i]..".png"},
+		tiles = {"default_sandstone.png^tsm_pyramids_"..img[i]..".png"},
 		is_ground_content = true,
 		groups = {crumbly=2,cracky=3},
 		sounds = default.node_sound_stone_defaults(),
@@ -16,7 +16,7 @@ trap_on_timer = function (pos, elapsed)
 		if obj:is_player() then
 			local n = minetest.get_node(pos)
 			if n and n.name and minetest.registered_nodes[n.name].crack < 2 then
-				minetest.set_node(pos, {name="pyramids:trap_2"})
+				minetest.set_node(pos, {name="tsm_pyramids:trap_2"})
 				nodeupdate(pos)
 			end
 		end
@@ -24,9 +24,9 @@ trap_on_timer = function (pos, elapsed)
 	return true
 end
 
-minetest.register_node("pyramids:trap", {
+minetest.register_node("tsm_pyramids:trap", {
 	description = "Cracked sandstone brick",
-	tiles = {"default_sandstone_brick.png^pyramids_crack.png"},
+	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png"},
 	is_ground_content = true,
 	groups = {crumbly=2,cracky=3},
 	sounds = default.node_sound_stone_defaults(),
@@ -38,9 +38,9 @@ minetest.register_node("pyramids:trap", {
 	drop = "",
 })
 
-minetest.register_node("pyramids:trap_2", {
+minetest.register_node("tsm_pyramids:trap_2", {
 	description = "trapstone",
-	tiles = {"default_sandstone_brick.png^pyramids_crack.png^[transformR90"},
+	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png^[transformR90"},
 	is_ground_content = true,
 	groups = {crumbly=2,cracky=3,falling_node=1,not_in_creative_inventory=1},
 	sounds = default.node_sound_stone_defaults(),

@@ -32,15 +32,15 @@ code["t"] = "trap"
 local function replace(str,iy)
 	local out = "default:"
 	if iy < 4 and str == "c" then str = "a" end
-	if iy == 0 and str == "s" then out = "pyramids:" str = "sun" end
-	if iy == 3 and str == "s" then out = "pyramids:" str = "men" end
+	if iy == 0 and str == "s" then out = "tsm_pyramids:" str = "sun" end
+	if iy == 3 and str == "s" then out = "tsm_pyramids:" str = "men" end
 	if str == "a" then out = "" end
 	return out..code[str]
 end
 
 local function replace2(str,iy)
 	local out = "default:"
-	if iy == 0 and str == "l" then out = "pyramids:" str = "t"
+	if iy == 0 and str == "l" then out = "tsm_pyramids:" str = "t"
 	elseif iy < 3 and str == "l" then str = "a" end
 
 	if str == "a" then out = "" end

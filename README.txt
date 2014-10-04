@@ -14,9 +14,9 @@ License of mesh model: WTFPL
 
 License of textures
 -------------------
--pyramids_eye.png by bas080, CC-BY-SA 3.0
--pyramids_men.png by bas080, CC-BY-SA 3.0
--pyramids_sun.png by bas080, CC-BY-SA 3.0
+-tsm_pyramids_eye.png by bas080, CC-BY-SA 3.0
+-tsm_pyramids_men.png by bas080, CC-BY-SA 3.0
+-tsm_pyramids_sun.png by bas080, CC-BY-SA 3.0
 
 all other: BlockMen, WTFPL
 

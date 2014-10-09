@@ -23,14 +23,22 @@ function pyramids.fill_chest(pos)
 			local inv = meta:get_inventory()
 			inv:set_size("main", 8*4)
 			if math.random(1,10) < 7 then return end
-			for i=0,2,1 do
-				local stuff = chest_stuff[math.random(1,#chest_stuff)]
-				if stuff.name == "farming:bread" and not minetest.get_modpath("farming") then stuff = chest_stuff[1] end
-				local stack = {name=stuff.name, count = math.random(1,stuff.max)}
-				if not inv:contains_item("main", stack) then
-					inv:set_stack("main", math.random(1,32), stack)
+			local stacks = {}
+			if minetest.get_modpath("treasurer") ~= nil then
+				stacks = treasurer.select_random_treasures(3,7,9,{"minetool", "food", "crafting_component"})
+			else
+				for i=0,2,1 do
+					local stuff = chest_stuff[math.random(1,#chest_stuff)]
+					if stuff.name == "farming:bread" and not minetest.get_modpath("farming") then stuff = chest_stuff[1] end
+					table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
 				end
 			end
+			for s=1,#stacks do
+				if not inv:contains_item("main", stacks[s]) then
+					inv:set_stack("main", math.random(1,32), stacks[s])
+				end
+			end
+
 		end
 	end)
 end

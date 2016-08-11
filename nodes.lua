@@ -10,7 +10,7 @@ for i=1,3 do
 	})
 end
 
-trap_on_timer = function (pos, elapsed)
+local trap_on_timer = function (pos, elapsed)
 	local objs = minetest.env:get_objects_inside_radius(pos, 2)
 	for i, obj in pairs(objs) do
 		if obj:is_player() then

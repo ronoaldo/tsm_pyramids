@@ -59,14 +59,10 @@ local function hit(self)
 end
 
 local function mummy_update_visuals_def(self)
-	--local name = get_player_name()
-	local visual = default_model_def
 	npc_anim = 0 -- Animation will be set further below immediately
-	--npc_sneak[name] = false
 	local prop = {
 		mesh = mummy_mesh,
 		textures = mummy_texture,
-		--visual_size = {x=1, y=1, z=1},
 	}
 	self.object:set_properties(prop)
 end
@@ -143,20 +139,7 @@ end
 
 MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
 
-	--attack as group
-	--[[for  _,object in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 5)) do
-		if not object:is_player() then
-			if object:get_luaentity().name == "peaceful_npc:npc_def" then
-				object:get_luaentity().state = 3
-				object:get_luaentity().attacker = puncher:get_player_name()
-			end
-		end
-	end]]
-
-	--if self.state ~= 3 then
-		--self.state = 3
-		self.attacker = puncher--:get_player_name()
-	--end
+	self.attacker = puncher
 
 	if puncher ~= nil then
 		local sound = sound_hit
@@ -164,11 +147,9 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 		minetest.sound_play(sound, {to_player = puncher:get_player_name(), loop = false, gain = 0.3})
 		if time_from_last_punch >= 0.45 then
 			hit(self)
-			--local dir = puncher:get_look_dir()
-		--self.direction = dir
 			self.direction = {x=self.object:getvelocity().x, y=self.object:getvelocity().y, z=self.object:getvelocity().z}
 			self.punch_timer = 0
-			self.object:setvelocity({x=dir.x*mummy_chillaxin_speed,y=5,z=dir.z*mummy_chillaxin_speed})--self.object:setvelocity({x=dir.x*4,y=5,z=dir.z*4})
+			self.object:setvelocity({x=dir.x*mummy_chillaxin_speed,y=5,z=dir.z*mummy_chillaxin_speed})
 			if self.state == 1 then
 				self.state = 8
 			elseif self.state >= 2 then
@@ -199,15 +180,11 @@ MUMMY_DEF.on_step = function(self, dtime)
 		self.time_passed = 0
 	end
 
-	--self.time_passed = self.time_passed + dtime
-	if self.object:get_hp() == 0 then-- self.object:remove() end
-
-	--if self.time_passed >= 5 then
+	if self.object:get_hp() == 0 then
 		minetest.sound_play(sound_dead, {pos = current_pos, max_hear_distance = 10 , gain = 0.3})
 		self.object:remove()
-	end--else
-	 if current_node.name == "default:water_source" or current_node.name == "default:water_flowing" or current_node.name == "default:lava_source" or current_node.name == "default:lava_flowing" then
-		--self.time_passed =  self.time_passed + dtime
+	end
+	if current_node.name == "default:water_source" or current_node.name == "default:water_flowing" or current_node.name == "default:lava_source" or current_node.name == "default:lava_flowing" then
 		self.sound_timer = self.sound_timer + dtime
 		if self.sound_timer >= 0.8 then
 			self.sound_timer = 0
@@ -218,7 +195,6 @@ MUMMY_DEF.on_step = function(self, dtime)
 	 else
 		self.time_passed = 0
 	 end
-	--end
 
 	--update moving state every 1 or 2 seconds
 	if self.state < 3 then
@@ -239,7 +215,6 @@ MUMMY_DEF.on_step = function(self, dtime)
 	--after punched
 	if self.state >= 8 then
 		if self.punch_timer > 0.15 then
-			--self.direction = {x = math.sin(self.yaw)*-1, y = -20, z = math.cos(self.yaw)}
 			if self.state == 9 then
 				self.object:setvelocity({x=self.direction.x*mummy_chillaxin_speed,y=-20,z=self.direction.z*mummy_chillaxin_speed})
 				self.state = 2
@@ -266,11 +241,11 @@ MUMMY_DEF.on_step = function(self, dtime)
 				end
 				self.yaw = self.yaw - 2
 				self.object:setyaw(self.yaw)
-				self.attacker = object--:get_player_name()
+				self.attacker = object
 			end
 		end
 
-		if self.attacker == "" and self.turn_timer > math.random(1,4) then--and yawwer == true then
+		if self.attacker == "" and self.turn_timer > math.random(1,4) then
 			self.yaw = 360 * math.random()
 			self.object:setyaw(self.yaw)
 			self.turn_timer = 0
@@ -298,23 +273,12 @@ MUMMY_DEF.on_step = function(self, dtime)
 			self.object:setyaw(self.yaw)
 			self.turn_timer = 0
 			self.direction = {x = math.sin(self.yaw)*-1, y = -20, z = math.cos(self.yaw)}
-			--self.object:setvelocity({x=self.direction.x,y=self.object:getvelocity().y,z=direction.z})
-			--self.object:setacceleration(self.direction)
 		end
 		if self.npc_anim ~= ANIM_WALK then
 			self.anim = get_animations()
 			self.object:set_animation({x=self.anim.walk_START,y=self.anim.walk_END}, mummy_animation_speed, mummy_animation_blend)
 			self.npc_anim = ANIM_WALK
 		end
-		--[[jump
-		if self.direction ~= nil then
-			if self.jump_timer > 0.3 then
-				if minetest.env:get_node({x=self.object:getpos().x + self.direction.x,y=self.object:getpos().y-1,z=self.object:getpos().z + self.direction.z}).name ~= "air" then
-					self.object:setvelocity({x=self.object:getvelocity().x,y=5,z=self.object:getvelocity().z})
-					self.jump_timer = 0
-				end
-			end
-		end]]
 
 		if self.attacker ~= "" and minetest.setting_getbool("enable_damage") then
 			local s = self.object:getpos()
@@ -366,7 +330,7 @@ minetest.register_node("tsm_pyramids:spawner_mummy", {
 	paramtype = "light",
 	tiles = {"tsm_pyramids_spawner.png"},
 	is_ground_content = true,
-	drawtype = "allfaces",--_optional",
+	drawtype = "allfaces",
 	groups = {cracky=1,level=1},
 	drop = "",
 	on_construct = function(pos)

@@ -329,7 +329,7 @@ minetest.register_node("tsm_pyramids:spawner_mummy", {
 	description = "Mummy spawner",
 	paramtype = "light",
 	tiles = {"tsm_pyramids_spawner.png"},
-	is_ground_content = true,
+	is_ground_content = false,
 	drawtype = "allfaces",
 	groups = {cracky=1,level=1},
 	drop = "",

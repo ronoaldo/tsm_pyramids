@@ -61,7 +61,7 @@ local function hit(self)
 	}
 	self.object:set_properties(prop)
 	minetest.after(0.4, function()
-		prop = {textures = mummy_texture,}
+               local prop = {textures = mummy_texture,}
 		self.object:set_properties(prop)
 	end)
 end

@@ -1,0 +1,7 @@
+Cracked sandstone brick = Rissiger Sandsteinziegel
+Fallen cracked sandstone brick = Gefallene rissiger Sandsteinziegel
+Mummy spawn-egg = Mumienerzeugerei
+Mummy spawner = Mumienerzeuger
+Sandstone with eye engraving = Sandstein mit Augengravur
+Sandstone with man engraving = Sandstein mit Manngravur
+Sandstone with sun engraving = Sandstein mit Sonnengravur

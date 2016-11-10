@@ -1,4 +1,4 @@
-local desc = {"Sandstone with eye", "Sandstone with man", "Sandstone with sun"}
+local desc = {"Sandstone with eye engraving", "Sandstone with man engraving", "Sandstone with sun engraving"}
 local img = {"eye", "men", "sun"}
 
 for i=1,3 do

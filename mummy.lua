@@ -325,6 +325,13 @@ function pyramids.spawn_mummy (pos, number)
 	end
 end
 
+local spawnersounds
+if default.node_sound_metal_defaults then
+	spawnersounds = default.node_sound_metal_defaults()
+else
+	spawnersounds = default.node_sound_stone_defaults()
+end
+
 minetest.register_node("tsm_pyramids:spawner_mummy", {
 	description = "Mummy spawner",
 	paramtype = "light",
@@ -345,7 +352,8 @@ minetest.register_node("tsm_pyramids:spawner_mummy", {
 				end
 			end
 		end
-	end
+	end,
+	sounds = spawnersounds,
 })
 if not minetest.setting_getbool("only_peaceful_mobs") then
  minetest.register_abm({

@@ -6,7 +6,7 @@ for i=1,3 do
 		description = desc[i],
 		tiles = {"default_sandstone.png^tsm_pyramids_"..img[i]..".png"},
 		is_ground_content = false,
-		groups = {crumbly=2,cracky=3},
+		groups = minetest.registered_nodes["default:sandstone"].groups,
 		sounds = default.node_sound_stone_defaults(),
 	})
 end
@@ -29,7 +29,7 @@ minetest.register_node("tsm_pyramids:trap", {
 	description = "Cracked sandstone brick",
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png"},
 	is_ground_content = false,
-	groups = {crumbly=2,cracky=3},
+	groups = {crumbly=3,cracky=3},
 	sounds = default.node_sound_stone_defaults(),
 	on_construct = function(pos)
 		minetest.env:get_node_timer(pos):start(0.1)
@@ -40,10 +40,10 @@ minetest.register_node("tsm_pyramids:trap", {
 })
 
 minetest.register_node("tsm_pyramids:trap_2", {
-	description = "Trap sandstone",
+	description = "Fallen cracked sandstone brick",
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png^[transformR90"},
 	is_ground_content = false,
-	groups = {crumbly=2,cracky=3,falling_node=1,not_in_creative_inventory=1},
+	groups = {crumbly=3,cracky=3,falling_node=1,not_in_creative_inventory=1},
 	sounds = default.node_sound_stone_defaults(),
 	drop = "",
 })

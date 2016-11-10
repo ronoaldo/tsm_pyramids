@@ -4,7 +4,7 @@ local img = {"eye", "men", "sun"}
 for i=1,3 do
 	minetest.register_node("tsm_pyramids:deco_stone"..i, {
 		description = desc[i],
-		tiles = {"default_sandstone.png^tsm_pyramids_"..img[i]..".png"},
+		tiles = {"default_sandstone.png", "default_sandstone.png", "default_sandstone.png^tsm_pyramids_"..img[i]..".png"},
 		is_ground_content = false,
 		groups = minetest.registered_nodes["default:sandstone"].groups,
 		sounds = default.node_sound_stone_defaults(),

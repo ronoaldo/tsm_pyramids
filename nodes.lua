@@ -25,7 +25,7 @@ local trap_on_timer = function (pos, elapsed)
 		if obj:is_player() then
 			local n = minetest.get_node(pos)
 			if n and n.name then
-				if minetest.registered_nodes[n.name].crack and minetest.registered_nodes[n.name].crack < 2 then
+				if minetest.registered_nodes[n.name].x_tsm_pyramids_crack and minetest.registered_nodes[n.name].x_tsm_pyramids_crack < 2 then
 					minetest.set_node(pos, {name="tsm_pyramids:trap_2"})
 					nodeupdate(pos)
 				end
@@ -44,7 +44,7 @@ minetest.register_node("tsm_pyramids:trap", {
 	on_construct = function(pos)
 		minetest.env:get_node_timer(pos):start(0.1)
 	end,
-	crack = 1,
+	x_tsm_pyramids_crack = 1,
 	on_timer = trap_on_timer,
 	drop = "",
 })

@@ -33,9 +33,9 @@ the extent permitted by applicable law.
 * All other: BlockMen, WTFPL
 
 ### Sounds
-The authors are: ([freesound.org](https://freesound.org))
+The authors are ([freesound.org](https://freesound.org)):
 
 * `mummy.1.ogg` by Raventhornn, [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
 * `mummy.2.ogg` by Raventhornn, CC0
 * `mummy_hurt.1.ogg` by Under7dude, CC0
-
+* `mummy_death.1.ogg` by scorpion67890 (modified by Wuzzy), CC0

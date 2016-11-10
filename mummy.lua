@@ -20,9 +20,7 @@ local mummy_drop = "default:papyrus"
 
 local sound_normal = "mummy"
 local sound_hit = "mummy_hurt"
-
--- TODO: Old mummy death sound has been removed. Find a replacement for this
-local sound_dead = "mummy_hurt"
+local sound_dead = "mummy_death"
 
 local spawner_range = 17
 local spawner_max_mobs = 6

@@ -2,11 +2,14 @@
 
 * Version: 0.6
 
-## Using the mod
+## Description
 This mod adds randomly spawned pyramids in deserts. The pyramids are very rare
 and contain a chest with stuff. Also there are mummys inside, which attack
 the player if found in their radius.
 
+## For users of the old `pyramids` mod
+This mod is a fork of the old `pyramids` mod by BlockMen and intended to be a direct
+(but unofficial) successor of it.
 
 ## Licensing
 This program is free software. It comes without any warranty, to

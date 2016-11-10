@@ -375,7 +375,9 @@ if not minetest.setting_getbool("only_peaceful_mobs") then
 			if obj:is_player() then
 				player_near = true 
 			else
-				if obj:get_luaentity().mob_name == "mummy" then mobs = mobs + 1 end
+				if obj:get_luaentity() and obj:get_luaentity().mob_name == "mummy" then
+					mobs = mobs + 1
+				end
 			end
 		end
 		if player_near then

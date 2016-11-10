@@ -175,3 +175,17 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		minetest.after(0.8,make,p2)
 	end
 end)
+
+-- Add backwards-compability for nodes from the original pyramids mod
+if minetest.get_modpath("pyramids") == nil then
+	-- Nodes
+	minetest.register_alias("pyramids:trap", "tsm_pyramids:trap")
+	minetest.register_alias("pyramids:trap_2", "tsm_pyramids:trap_2")
+	minetest.register_alias("pyramids:deco_stone1", "tsm_pyramids:deco_stone1")
+	minetest.register_alias("pyramids:deco_stone2", "tsm_pyramids:deco_stone2")
+	minetest.register_alias("pyramids:deco_stone3", "tsm_pyramids:deco_stone3")
+	minetest.register_alias("pyramids:spawner_mummy", "tsm_pyramids:spawner_mummy")
+
+	-- FIXME: Entities are currently NOT backwards-compatible
+	-- TODO: Update README when full backwards-compability is achieved
+end

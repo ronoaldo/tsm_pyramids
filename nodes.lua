@@ -1,8 +1,9 @@
+local desc = {"Sandstone with eye", "Sandstone with man", "Sandstone with sun"}
 local img = {"eye", "men", "sun"}
 
 for i=1,3 do
 	minetest.register_node("tsm_pyramids:deco_stone"..i, {
-		description = "Sandstone with "..img[i],
+		description = desc[i],
 		tiles = {"default_sandstone.png^tsm_pyramids_"..img[i]..".png"},
 		is_ground_content = false,
 		groups = {crumbly=2,cracky=3},
@@ -39,7 +40,7 @@ minetest.register_node("tsm_pyramids:trap", {
 })
 
 minetest.register_node("tsm_pyramids:trap_2", {
-	description = "trapstone",
+	description = "Trap sandstone",
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png^[transformR90"},
 	is_ground_content = false,
 	groups = {crumbly=2,cracky=3,falling_node=1,not_in_creative_inventory=1},

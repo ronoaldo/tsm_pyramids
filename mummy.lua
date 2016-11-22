@@ -342,7 +342,7 @@ end
 
 minetest.register_node("tsm_pyramids:spawner_mummy", {
 	description = S("Mummy spawner"),
-	_doc_items_longdesc = S("A mummy spawner causes hostile mummies to appear its vicinity as long it exists."),
+	_doc_items_longdesc = S("A mummy spawner causes hostile mummies to appear in its vicinity as long it exists."),
 	paramtype = "light",
 	tiles = {"tsm_pyramids_spawner.png"},
 	is_ground_content = false,

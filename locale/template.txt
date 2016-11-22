@@ -10,3 +10,5 @@ Can be used to create a hostile mummy. =
 Place the egg to create a mummy on this spot. Careful, it will probably attack immediately! = 
 This brick is old, porous and unstable and is barely able to hold itself. One should be careful not to disturb it. =
 This old and porous brick fell to the ground. It does not hold itself anymore. =
+No more mummies! =
+Destroy a mummy spawner by digging. =

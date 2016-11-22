@@ -3,3 +3,4 @@ farming?
 treasurer?
 intllib?
 doc_items?
+awards?

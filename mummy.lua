@@ -391,4 +391,17 @@ if not minetest.setting_getbool("only_peaceful_mobs") then
 	end
  })
 end
-	
+
+if minetest.get_modpath("awards") then
+	awards.register_achievement("tsm_pyramids_no_mummy_spawner", {
+		title = S("No more mummies!"),
+		description = S("Destroy a mummy spawner by digging."),
+		secret = true,
+		icon = "tsm_pyramids_spawner.png",
+		trigger = {
+			type = "dig",
+			node = "tsm_pyramids:spawner_mummy",
+			target = 1
+		}
+	})
+end

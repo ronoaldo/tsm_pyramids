@@ -9,9 +9,15 @@ end
 local desc = {S("Sandstone with eye engraving"), S("Sandstone with man engraving"), S("Sandstone with sun engraving")}
 local img = {"eye", "men", "sun"}
 
+local decodesc = ""
+if minetest.get_modpath("doc_items") then
+	decodesc = doc.sub.items.temp.deco
+end
+
 for i=1,3 do
 	minetest.register_node("tsm_pyramids:deco_stone"..i, {
 		description = desc[i],
+		_doc_items_longdesc = decodesc,
 		tiles = {"default_sandstone.png", "default_sandstone.png", "default_sandstone.png^tsm_pyramids_"..img[i]..".png"},
 		is_ground_content = false,
 		groups = minetest.registered_nodes["default:sandstone"].groups,
@@ -37,6 +43,7 @@ end
 
 minetest.register_node("tsm_pyramids:trap", {
 	description = S("Cracked sandstone brick"),
+	_doc_items_longdesc = S("This brick is old, porous and unstable and is barely able to hold itself. One should be careful not to disturb it."),
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png"},
 	is_ground_content = false,
 	groups = {crumbly=3,cracky=3},
@@ -51,6 +58,7 @@ minetest.register_node("tsm_pyramids:trap", {
 
 minetest.register_node("tsm_pyramids:trap_2", {
 	description = S("Fallen cracked sandstone brick"),
+	_doc_items_longdesc = S("This old and porous brick fell to the ground. It does not hold itself anymore."),
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png^[transformR90"},
 	is_ground_content = false,
 	groups = {crumbly=3,cracky=3,falling_node=1,not_in_creative_inventory=1},

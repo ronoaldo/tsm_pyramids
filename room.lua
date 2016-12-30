@@ -48,31 +48,31 @@ local function replace2(str,iy)
 end
 
 function pyramids.make_room(pos)
- local loch = {x=pos.x+7,y=pos.y+5, z=pos.z+7}
- for iy=0,4,1 do
-	for ix=0,8,1 do
-		for iz=0,8,1 do
-			local n_str = room[tonumber(ix*9+iz+1)]
-			local p2 = 0
-			if n_str == "c" then
-				if ix < 3 then p2 = 1 else p2 = 3 end
-				pyramids.fill_chest({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz})
+	local loch = {x=pos.x+7,y=pos.y+5, z=pos.z+7}
+	for iy=0,4,1 do
+		for ix=0,8,1 do
+			for iz=0,8,1 do
+				local n_str = room[tonumber(ix*9+iz+1)]
+				local p2 = 0
+				if n_str == "c" then
+					if ix < 3 then p2 = 1 else p2 = 3 end
+					pyramids.fill_chest({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz})
+				end
+				minetest.set_node({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz}, {name=replace(n_str,iy), param2=p2})
 			end
-			minetest.set_node({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz}, {name=replace(n_str,iy), param2=p2})
 		end
 	end
- end
 end
 
 function pyramids.make_traps(pos)
- local loch = {x=pos.x+7,y=pos.y, z=pos.z+7}
- for iy=0,4,1 do
-	for ix=0,8,1 do
-		for iz=0,8,1 do
-			local n_str = trap[tonumber(ix*9+iz+1)]
-			local p2 = 0
-			minetest.set_node({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz}, {name=replace2(n_str,iy), param2=p2})
+	local loch = {x=pos.x+7,y=pos.y, z=pos.z+7}
+	for iy=0,4,1 do
+		for ix=0,8,1 do
+			for iz=0,8,1 do
+				local n_str = trap[tonumber(ix*9+iz+1)]
+				local p2 = 0
+				minetest.set_node({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz}, {name=replace2(n_str,iy), param2=p2})
+			end
 		end
 	end
- end
 end

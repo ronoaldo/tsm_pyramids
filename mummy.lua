@@ -365,31 +365,31 @@ minetest.register_node("tsm_pyramids:spawner_mummy", {
 	sounds = spawnersounds,
 })
 if not minetest.setting_getbool("only_peaceful_mobs") then
- minetest.register_abm({
-	nodenames = {"tsm_pyramids:spawner_mummy"},
-	interval = 2.0,
-	chance = 20,
-	action = function(pos, node, active_object_count, active_object_count_wider)
-		local player_near = false
-		local mobs = 0
-		for  _,obj in ipairs(minetest.env:get_objects_inside_radius(pos, spawner_range)) do
-			if obj:is_player() then
-				player_near = true 
-			else
-				if obj:get_luaentity() and obj:get_luaentity().mob_name == "mummy" then
-					mobs = mobs + 1
+	minetest.register_abm({
+		nodenames = {"tsm_pyramids:spawner_mummy"},
+		interval = 2.0,
+		chance = 20,
+		action = function(pos, node, active_object_count, active_object_count_wider)
+			local player_near = false
+			local mobs = 0
+			for  _,obj in ipairs(minetest.env:get_objects_inside_radius(pos, spawner_range)) do
+				if obj:is_player() then
+					player_near = true
+				else
+					if obj:get_luaentity() and obj:get_luaentity().mob_name == "mummy" then
+						mobs = mobs + 1
+					end
+				end
+			end
+			if player_near then
+				if mobs < spawner_max_mobs then
+					pos.x = pos.x+1
+					local p = minetest.find_node_near(pos, 5, {"air"})
+					minetest.env:add_entity(p,"tsm_pyramids:mummy")
 				end
 			end
 		end
-		if player_near then
-			if mobs < spawner_max_mobs then
-				pos.x = pos.x+1
-				local p = minetest.find_node_near(pos, 5, {"air"})	
-				minetest.env:add_entity(p,"tsm_pyramids:mummy")
-			end
-		end
-	end
- })
+	})
 end
 
 if minetest.get_modpath("awards") then

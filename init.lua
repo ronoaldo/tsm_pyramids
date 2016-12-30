@@ -59,45 +59,45 @@ local function can_replace(pos)
 	end
 end
 
-local function underground(pos)
+local function underground(pos, stone, sand)
 	local p2 = pos
 	local cnt = 0
-	local mat = "desert_sand"
+	local mat = stone
 	p2.y = p2.y-1
 	while can_replace(p2)==true do
 		cnt = cnt+1
 		if cnt > 25 then break end
-		if cnt>math.random(2,4) then mat = "desert_stone"end
-		minetest.set_node(p2, {name="default:"..mat})
+		if cnt>math.random(2,4) then mat = stone end
+		minetest.set_node(p2, {name=mat})
 		p2.y = p2.y-1
 	end
 end
 
-local function make_entrance(pos)
+local function make_entrance(pos, brick)
 	local gang = {x=pos.x+10,y=pos.y, z=pos.z}
 	for iy=2,3,1 do
 		for iz=0,6,1 do
 			minetest.remove_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz})
 			if iz >=3 and iy == 3 then
-				minetest.set_node({x=gang.x,y=gang.y+iy+1,z=gang.z+iz}, {name="default:sandstonebrick"})
-				minetest.set_node({x=gang.x+1,y=gang.y+iy+1,z=gang.z+iz}, {name="default:sandstonebrick"})
-				minetest.set_node({x=gang.x+2,y=gang.y+iy+1,z=gang.z+iz}, {name="default:sandstonebrick"})
+				minetest.set_node({x=gang.x,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
+				minetest.set_node({x=gang.x+1,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
+				minetest.set_node({x=gang.x+2,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
 			end
 		end
 	end
 end
 
-local function make(pos)
+local function make(pos, brick, sandstone, stone, sand)
 	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
 	for iy=0,10,1 do
 		for ix=iy,22-iy,1 do
 			for iz=iy,22-iy,1 do
-			if iy <1 then underground({x=pos.x+ix,y=pos.y,z=pos.z+iz}) end
-				minetest.set_node({x=pos.x+ix,y=pos.y+iy,z=pos.z+iz}, {name="default:sandstonebrick"})
+			if iy <1 then underground({x=pos.x+ix,y=pos.y,z=pos.z+iz}, stone, sand) end
+				minetest.set_node({x=pos.x+ix,y=pos.y+iy,z=pos.z+iz}, {name=brick})
 				for yy=1,10-iy,1 do
 					local n = minetest.get_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
-					if n and n.name and n.name == "default:desert_stone" then
-						minetest.set_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz},{name="default:desert_sand"})
+					if n and n.name and n.name == stone then
+						minetest.set_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz},{name=sand})
 					end
 				end
 			end
@@ -107,7 +107,7 @@ local function make(pos)
 	pyramids.make_room(pos)
 	minetest.after(2, pyramids.make_traps, pos)
 	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
-	make_entrance({x=pos.x,y=pos.y, z=pos.z})
+	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick)
 end
 
 local perl1 = {SEED1 = 9130, OCTA1 = 3,	PERS1 = 0.5, SCAL1 = 250} -- Values should match minetest mapgen V6 desert noise.
@@ -144,11 +144,20 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if noise1 > 0.25 or noise1 < -0.26 then
 		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
 
-		local p2 = minetest.find_node_near(mpos, 25, {"default:desert_sand"})
-		while p2 == nil and cnt < 5 do
-			cnt = cnt+1
-			mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
-			p2 = minetest.find_node_near(mpos, 25, {"default:desert_sand"})	
+		local sands = {"default:desert_sand", "default:sand"}
+		local p2
+		local sand
+		for s=1, #sands do
+			sand = sands[s]
+			p2 = minetest.find_node_near(mpos, 25, sand)
+			while p2 == nil and cnt < 5 do
+				cnt = cnt+1
+				mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
+				p2 = minetest.find_node_near(mpos, 25, sand)
+			end
+			if p2 ~= nil then
+				break
+			end
 		end
 		if p2 == nil then return end
 		if p2.y < 0 then return end
@@ -171,14 +180,25 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		end
 		p2.y = p2.y - 3
 		if p2.y < 0 then p2.y = 0 end
-		if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or minetest.find_node_near(p2, 52, {"default:sandstonebrick"}) ~= nil then
+		if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or 
+				minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
+				minetest.find_node_near(p2, 52, {"default:sandstonebrick"}) ~= nil or
+				minetest.find_node_near(p2, 52, {"sandplus:desert_sandstonebrick"}) ~= nil then
 			return
 		end
 	
 		if math.random(0,10) > 7 then
 			return
 		end
-		minetest.after(0.8,make,p2)
+		if sand == "default:desert_sand" then
+			if minetest.get_modpath("sandplus") then
+				minetest.after(0.8, make, p2, "sandplus:desert_sandstonebrick", "sandplus:desert_sandstone", "default:desert_stone", "default:desert_sand")
+			else
+				minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:desert_stone", "default:desert_sand")
+			end
+		else
+			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand")
+		end
 	end
 end)
 

@@ -33,7 +33,7 @@ local trap_on_timer = function (pos, elapsed)
 			if n and n.name then
 				if minetest.registered_nodes[n.name]._tsm_pyramids_crack and minetest.registered_nodes[n.name]._tsm_pyramids_crack < 2 then
 					minetest.set_node(pos, {name="tsm_pyramids:trap_2"})
-					nodeupdate(pos)
+					minetest.check_for_falling(pos)
 				end
 			end
 		end

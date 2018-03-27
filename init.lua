@@ -1,4 +1,5 @@
 pyramids = {}
+local random = math.random
 
 dofile(minetest.get_modpath("tsm_pyramids").."/mummy.lua")
 dofile(minetest.get_modpath("tsm_pyramids").."/nodes.lua")
@@ -22,20 +23,20 @@ function pyramids.fill_chest(pos)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			inv:set_size("main", 8*4)
-			if math.random(1,10) < 7 then return end
+			if random(1,10) < 7 then return end
 			local stacks = {}
 			if minetest.get_modpath("treasurer") ~= nil then
 				stacks = treasurer.select_random_treasures(3,7,9,{"minetool", "food", "crafting_component"})
 			else
 				for i=0,2,1 do
-					local stuff = chest_stuff[math.random(1,#chest_stuff)]
+					local stuff = chest_stuff[random(1,#chest_stuff)]
 					if stuff.name == "farming:bread" and not minetest.get_modpath("farming") then stuff = chest_stuff[1] end
-					table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
+					table.insert(stacks, {name=stuff.name, count = random(1,stuff.max)})
 				end
 			end
 			for s=1,#stacks do
 				if not inv:contains_item("main", stacks[s]) then
-					inv:set_stack("main", math.random(1,32), stacks[s])
+					inv:set_stack("main", random(1,32), stacks[s])
 				end
 			end
 
@@ -67,7 +68,7 @@ local function underground(pos, stone, sand)
 	while can_replace(p2)==true do
 		cnt = cnt+1
 		if cnt > 25 then break end
-		if cnt>math.random(2,4) then mat = stone end
+		if cnt>random(2,4) then mat = stone end
 		minetest.set_node(p2, {name=mat})
 		p2.y = p2.y-1
 	end
@@ -142,9 +143,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	local noise1 = perlin1:get2d({x=minp.x,y=minp.y})--,z=minp.z})
 
 	if noise1 > 0.25 or noise1 < -0.26 then
-		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
+		local mpos = {x=random(minp.x,maxp.x), y=random(minp.y,maxp.y), z=random(minp.z,maxp.z)}
 
-		local sands = {"default:desert_sand", "default:sand"}
+		local sands = {"default:desert_sand"}
 		local p2
 		local sand
 		for s=1, #sands do
@@ -152,7 +153,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			p2 = minetest.find_node_near(mpos, 25, sand)
 			while p2 == nil and cnt < 5 do
 				cnt = cnt+1
-				mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
+				mpos = {x=random(minp.x,maxp.x), y=random(minp.y,maxp.y), z=random(minp.z,maxp.z)}
 				p2 = minetest.find_node_near(mpos, 25, sand)
 			end
 			if p2 ~= nil then
@@ -187,14 +188,21 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			return
 		end
 	
-		if math.random(0,10) > 7 then
+		if random(0,10) > 7 then
 			return
 		end
+		local p_type = random(1, 3)
+		local p_pot = {
+			[1] = {"default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand"},
+			[2] = {"default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand"},
+			[3] = {"default:silver_sandstone_brick", "default:silver_sandstone", "default:silver_sandstone", "default:silver_sand"}
+		}
+		
 		if sand == "default:desert_sand" then
 			if minetest.get_modpath("sandplus") then
 				minetest.after(0.8, make, p2, "sandplus:desert_sandstonebrick", "sandplus:desert_sandstone", "default:desert_stone", "default:desert_sand")
 			else
-				minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:desert_stone", "default:desert_sand")
+				minetest.after(0.8, make, p2, p_pot[p_type][1], p_pot[p_type][2], p_pot[p_type][3], p_pot[p_type][4])
 			end
 		else
 			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand")

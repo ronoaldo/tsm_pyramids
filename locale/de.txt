@@ -1,5 +1,5 @@
 Cracked Sandstone Brick = Rissiger Sandsteinziegel
-Fallen Cracked Sandstone Brick = Gefallener rissiger Sandsteinziegel
+Falling Cracked Sandstone Brick = Fallender rissiger Sandsteinziegel
 Mummy Spawn Egg = Mumien-Spawn-Ei
 Mummy Spawner = Mumien-Spawner
 Sandstone with Eye Engraving = Sandstein mit Augengravur
@@ -9,6 +9,6 @@ A mummy spawner causes hostile mummies to appear in its vicinity as long it exis
 Can be used to create a hostile mummy. = Kann benutzt werden, um eine feindliche Mumie zu erzeugen (auch »spawnen« genannt).
 Place the egg to create a mummy on this spot. Careful, it will probably attack immediately! = Platzieren Sie das Ei, um dort eine Mumie zu erzeugen. Vorsicht, sie wird wahrscheinlich sofort angreifen!
 This brick is old, porous and unstable and is barely able to hold itself. One should be careful not to disturb it. = Dieser Ziegel ist alt, porös und instabil und kann sich so gerade noch selbst stützen. Man sollte vorsichtig sein, ihn nicht zu belasten.
-This old and porous brick fell to the ground. It does not hold itself anymore. = Dieser alte und poröse Ziegel fiel zu Boden und wird durch nichts mehr gestützt.
+This old porous brick falls under its own weight. = Dieser alte poröse Ziegel fällt unter seinem eigenem Gewicht.
 No more mummies! = Keine Mumien mehr!
 Destroy a mummy spawner by digging. = Zerstören Sie einen Mumien-Spawner, indem Sie ihn graben.

@@ -1,5 +1,5 @@
 Cracked Sandstone Brick =
-Fallen Cracked Sandstone Brick =
+Falling Cracked Sandstone Brick =
 Mummy Spawn Egg =
 Mummy Spawner =
 Sandstone with Eye Engraving =
@@ -9,6 +9,6 @@ A mummy spawner causes hostile mummies to appear in its vicinity as long it exis
 Can be used to create a hostile mummy. = 
 Place the egg to create a mummy on this spot. Careful, it will probably attack immediately! = 
 This brick is old, porous and unstable and is barely able to hold itself. One should be careful not to disturb it. =
-This old and porous brick fell to the ground. It does not hold itself anymore. =
+This old porous brick falls under its own weight. =
 No more mummies! =
 Destroy a mummy spawner by digging. =

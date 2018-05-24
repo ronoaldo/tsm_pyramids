@@ -57,8 +57,8 @@ minetest.register_node("tsm_pyramids:trap", {
 })
 
 minetest.register_node("tsm_pyramids:trap_2", {
-	description = S("Fallen Cracked Sandstone Brick"),
-	_doc_items_longdesc = S("This old and porous brick fell to the ground. It does not hold itself anymore."),
+	description = S("Falling Cracked Sandstone Brick"),
+	_doc_items_longdesc = S("This old porous brick falls under its own weight."),
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack2.png"},
 	is_ground_content = false,
 	groups = {crumbly=3,cracky=3,falling_node=1,not_in_creative_inventory=1},

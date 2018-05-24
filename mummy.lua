@@ -165,7 +165,7 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 	end
 
 	if self.object:get_hp() == 0 then
-	    local obj = minetest.env:add_item(self.object:getpos(), mummy_drop.." "..math.random(0,3))
+	    local obj = minetest.add_item(self.object:getpos(), mummy_drop.." "..math.random(0,3))
 	end
 end
 
@@ -181,7 +181,7 @@ MUMMY_DEF.on_step = function(self, dtime)
 	self.sound_timer = self.sound_timer + 0.01
 
 	local current_pos = self.object:getpos()
-	local current_node = minetest.env:get_node(current_pos)
+	local current_node = minetest.get_node(current_pos)
 	if self.time_passed == nil then
 		self.time_passed = 0
 	end
@@ -235,7 +235,7 @@ MUMMY_DEF.on_step = function(self, dtime)
 	if self.state == 1 then
 		self.yawwer = true
 		self.attacker = ""
-		for  _,object in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 4)) do
+		for  _,object in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 4)) do
 			if object:is_player() then
 				self.yawwer = false
 				local NPC = self.object:getpos()
@@ -319,7 +319,7 @@ minetest.register_craftitem("tsm_pyramids:spawn_egg", {
 	stack_max = 99,
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type == "node" then
-			minetest.env:add_entity(pointed_thing.above,"tsm_pyramids:mummy")
+			minetest.add_entity(pointed_thing.above,"tsm_pyramids:mummy")
 			if not minetest.setting_getbool("creative_mode") then itemstack:take_item() end
 			return itemstack
 		end
@@ -329,7 +329,7 @@ minetest.register_craftitem("tsm_pyramids:spawn_egg", {
 
 function pyramids.spawn_mummy (pos, number)
 	for i=0,number do
-		minetest.env:add_entity(pos,"tsm_pyramids:mummy")
+		minetest.add_entity(pos,"tsm_pyramids:mummy")
 	end
 end
 
@@ -351,10 +351,10 @@ minetest.register_node("tsm_pyramids:spawner_mummy", {
 	drop = "",
 	on_construct = function(pos)
 		pos.y = pos.y - 0.28
-		minetest.env:add_entity(pos,"tsm_pyramids:mummy_spawner")
+		minetest.add_entity(pos,"tsm_pyramids:mummy_spawner")
 	end,
 	on_destruct = function(pos)
-		for  _,obj in ipairs(minetest.env:get_objects_inside_radius(pos, 1)) do
+		for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, 1)) do
 			if not obj:is_player() then 
 				if obj ~= nil and obj:get_luaentity().m_name == "dummy" then
 					obj:remove()	
@@ -372,7 +372,7 @@ if not minetest.setting_getbool("only_peaceful_mobs") then
 		action = function(pos, node, active_object_count, active_object_count_wider)
 			local player_near = false
 			local mobs = 0
-			for  _,obj in ipairs(minetest.env:get_objects_inside_radius(pos, spawner_range)) do
+			for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, spawner_range)) do
 				if obj:is_player() then
 					player_near = true
 				else
@@ -385,7 +385,7 @@ if not minetest.setting_getbool("only_peaceful_mobs") then
 				if mobs < spawner_max_mobs then
 					pos.x = pos.x+1
 					local p = minetest.find_node_near(pos, 5, {"air"})
-					minetest.env:add_entity(p,"tsm_pyramids:mummy")
+					minetest.add_entity(p,"tsm_pyramids:mummy")
 				end
 			end
 		end

@@ -36,11 +36,11 @@ code_desert["2"] = "deco_stone5"
 code_desert["3"] = "deco_stone6"
 code_desert["b"] = "desert_sandstone_brick"
 
-local function replace(str, iy, code_table)
+local function replace(str, iy, code_table, deco)
 	local out = "default:"
 	if iy < 4 and str == "c" then str = "a" end
-	if iy == 0 and str == "s" then out = "tsm_pyramids:" str = "3" end
-	if iy == 3 and str == "s" then out = "tsm_pyramids:" str = "2" end
+	if iy == 0 and str == "s" then out = "tsm_pyramids:" str = deco[1] end
+	if iy == 3 and str == "s" then out = "tsm_pyramids:" str = deco[2] end
 	if str == "a" then out = "" end
 	return out..code_table[str]
 end
@@ -59,6 +59,14 @@ function pyramids.make_room(pos, stype)
 	if stype == "desert" then
 		code_table = code_desert
 	end
+	-- Select random deco block
+	local deco_ids = {"1", "2", "3"}
+	local deco = {}
+	for i=1, 2 do
+		local r = math.random(1, #deco_ids)
+		table.insert(deco, deco_ids[r])
+		table.remove(deco_ids, r)
+	end
 	local hole = {x=pos.x+7,y=pos.y+5, z=pos.z+7}
 	for iy=0,4,1 do
 		for ix=0,8,1 do
@@ -69,7 +77,7 @@ function pyramids.make_room(pos, stype)
 					if ix < 3 then p2 = 1 else p2 = 3 end
 					pyramids.fill_chest({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz})
 				end
-				minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace(n_str, iy, code_table), param2=p2})
+				minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace(n_str, iy, code_table, deco), param2=p2})
 			end
 		end
 	end

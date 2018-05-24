@@ -8,7 +8,7 @@ end
 
 local img = {
 	"eye", "men", "sun",
-	"scarab", "ankh", "cactus"
+	"ankh", "scarab", "cactus"
 }
 local desc = {
 	S("Sandstone with Eye Engraving"), S("Sandstone with Man Engraving"), S("Sandstone with Sun Engraving"),

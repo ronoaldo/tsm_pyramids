@@ -87,7 +87,7 @@ local function make_entrance(pos, brick)
 	end
 end
 
-local function make(pos, brick, sandstone, stone, sand)
+local function make(pos, brick, sandstone, stone, sand, ptype)
 	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
 	for iy=0,10,1 do
 		for ix=iy,22-iy,1 do
@@ -104,7 +104,7 @@ local function make(pos, brick, sandstone, stone, sand)
 		end
 	end
 
-	pyramids.make_room(pos)
+	pyramids.make_room(pos, ptype)
 	minetest.after(2, pyramids.make_traps, pos)
 	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
 	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick)
@@ -192,12 +192,12 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		end
 		if sand == "default:desert_sand" then
 			if minetest.get_modpath("sandplus") then
-				minetest.after(0.8, make, p2, "sandplus:desert_sandstonebrick", "sandplus:desert_sandstone", "default:desert_stone", "default:desert_sand")
+				minetest.after(0.8, make, p2, "sandplus:desert_sandstonebrick", "sandplus:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
 			else
-				minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:desert_stone", "default:desert_sand")
+				minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
 			end
 		else
-			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand")
+			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
 		end
 	end
 end)

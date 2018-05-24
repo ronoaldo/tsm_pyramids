@@ -1,10 +1,10 @@
-Cracked sandstone brick =
-Fallen cracked sandstone brick =
-Mummy spawn-egg =
-Mummy spawner =
-Sandstone with eye engraving =
-Sandstone with man engraving =
-Sandstone with sun engraving =
+Cracked Sandstone Brick =
+Fallen Cracked Sandstone Brick =
+Mummy Spawn Egg =
+Mummy Spawner =
+Sandstone with Eye Engraving =
+Sandstone with Man Engraving =
+Sandstone with Sun Engraving =
 A mummy spawner causes hostile mummies to appear in its vicinity as long it exists. =
 Can be used to create a hostile mummy. = 
 Place the egg to create a mummy on this spot. Careful, it will probably attack immediately! = 

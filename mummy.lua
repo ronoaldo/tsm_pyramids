@@ -311,7 +311,7 @@ minetest.register_entity("tsm_pyramids:mummy_spawner", spawner_DEF)
 --spawn-egg/spawner
 
 minetest.register_craftitem("tsm_pyramids:spawn_egg", {
-	description = S("Mummy spawn-egg"),
+	description = S("Mummy Spawn Egg"),
 	_doc_items_longdesc = S("Can be used to create a hostile mummy."),
 	_doc_items_usagehelp = S("Place the egg to create a mummy on this spot. Careful, it will probably attack immediately!"),
 	inventory_image = "tsm_pyramids_mummy_egg.png",
@@ -341,7 +341,7 @@ else
 end
 
 minetest.register_node("tsm_pyramids:spawner_mummy", {
-	description = S("Mummy spawner"),
+	description = S("Mummy Spawner"),
 	_doc_items_longdesc = S("A mummy spawner causes hostile mummies to appear in its vicinity as long it exists."),
 	paramtype = "light",
 	tiles = {"tsm_pyramids_spawner.png"},

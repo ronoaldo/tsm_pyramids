@@ -6,7 +6,7 @@ else
 	S = function(s) return s end
 end
 
-local desc = {S("Sandstone with eye engraving"), S("Sandstone with man engraving"), S("Sandstone with sun engraving")}
+local desc = {S("Sandstone with Eye Engraving"), S("Sandstone with Man Engraving"), S("Sandstone with Sun Engraving")}
 local img = {"eye", "men", "sun"}
 
 local decodesc = ""
@@ -42,7 +42,7 @@ local trap_on_timer = function (pos, elapsed)
 end
 
 minetest.register_node("tsm_pyramids:trap", {
-	description = S("Cracked sandstone brick"),
+	description = S("Cracked Sandstone Brick"),
 	_doc_items_longdesc = S("This brick is old, porous and unstable and is barely able to hold itself. One should be careful not to disturb it."),
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png"},
 	is_ground_content = false,
@@ -57,7 +57,7 @@ minetest.register_node("tsm_pyramids:trap", {
 })
 
 minetest.register_node("tsm_pyramids:trap_2", {
-	description = S("Fallen cracked sandstone brick"),
+	description = S("Fallen Cracked Sandstone Brick"),
 	_doc_items_longdesc = S("This old and porous brick fell to the ground. It does not hold itself anymore."),
 	tiles = {"default_sandstone_brick.png^tsm_pyramids_crack.png^[transformR90"},
 	is_ground_content = false,

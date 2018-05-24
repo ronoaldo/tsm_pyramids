@@ -1,10 +1,10 @@
-Cracked sandstone brick = Rissiger Sandsteinziegel
-Fallen cracked sandstone brick = Gefallener rissiger Sandsteinziegel
-Mummy spawn-egg = Mumien-Spawn-Ei
-Mummy spawner = Mumien-Spawner
-Sandstone with eye engraving = Sandstein mit Augengravur
-Sandstone with man engraving = Sandstein mit Manngravur
-Sandstone with sun engraving = Sandstein mit Sonnengravur
+Cracked Sandstone Brick = Rissiger Sandsteinziegel
+Fallen Cracked Sandstone Brick = Gefallener rissiger Sandsteinziegel
+Mummy Spawn Egg = Mumien-Spawn-Ei
+Mummy Spawner = Mumien-Spawner
+Sandstone with Eye Engraving = Sandstein mit Augengravur
+Sandstone with Man Engraving = Sandstein mit Manngravur
+Sandstone with Sun Engraving = Sandstein mit Sonnengravur
 A mummy spawner causes hostile mummies to appear in its vicinity as long it exists. = Ein Mumien-Spawner lässt feindliche Mumien in seiner näheren Umgebung auftauchen, solange er existiert.
 Can be used to create a hostile mummy. = Kann benutzt werden, um eine feindliche Mumie zu erzeugen (auch »spawnen« genannt).
 Place the egg to create a mummy on this spot. Careful, it will probably attack immediately! = Platzieren Sie das Ei, um dort eine Mumie zu erzeugen. Vorsicht, sie wird wahrscheinlich sofort angreifen!

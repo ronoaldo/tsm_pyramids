@@ -12,7 +12,7 @@ local img = {
 }
 local desc = {
 	S("Sandstone with Eye Engraving"), S("Sandstone with Man Engraving"), S("Sandstone with Sun Engraving"),
-	S("Desert Sandstone with Scarab Engraving"), S("Desert Sandstone with Ankh Engraving"), S("Desert Sandstone with Cactus Engraving")
+	S("Desert Sandstone with Ankh Engraving"), S("Desert Sandstone with Scarab Engraving"), S("Desert Sandstone with Cactus Engraving")
 }
 
 local decodesc = ""

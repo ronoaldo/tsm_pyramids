@@ -105,7 +105,7 @@ local function make(pos, brick, sandstone, stone, sand, ptype)
 	end
 
 	pyramids.make_room(pos, ptype)
-	minetest.after(2, pyramids.make_traps, pos)
+	minetest.after(2, pyramids.make_traps, pos, ptype)
 	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
 	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick)
 end

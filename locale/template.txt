@@ -1,4 +1,7 @@
 Cracked Sandstone Brick =
+Desert Sandstone with Ankh Engraving =
+Desert Sandstone with Cactus Engraving =
+Desert Sandstone with Scarab Engraving =
 Falling Cracked Sandstone Brick =
 Mummy Spawn Egg =
 Mummy Spawner =

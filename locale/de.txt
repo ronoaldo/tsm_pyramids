@@ -1,4 +1,7 @@
 Cracked Sandstone Brick = Rissiger Sandsteinziegel
+Desert Sandstone with Ankh Engraving = Wüstensandstein mit Ankh-Gravur
+Desert Sandstone with Cactus Engraving = Wüstensandstein mit Kaktusgravur
+Desert Sandstone with Scarab Engraving = Wüstensandstein mit Skarabäusgravur
 Falling Cracked Sandstone Brick = Fallender rissiger Sandsteinziegel
 Mummy Spawn Egg = Mumien-Spawn-Ei
 Mummy Spawner = Mumien-Spawner

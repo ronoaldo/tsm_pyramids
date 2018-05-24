@@ -111,6 +111,7 @@ local function make(pos, brick, sandstone, stone, sand, ptype)
 end
 
 local perl1 = {SEED1 = 9130, OCTA1 = 3,	PERS1 = 0.5, SCAL1 = 250} -- Values should match minetest mapgen V6 desert noise.
+local perlin1 = minetest.get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
 
 local function hlp_fnct(pos, name)
 	local n = minetest.get_node_or_nil(pos)
@@ -138,7 +139,6 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	math.randomseed(seed)
 	local cnt = 0
 
-	local perlin1 = minetest.get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
 	local noise1 = perlin1:get2d({x=minp.x,y=minp.y})--,z=minp.z})
 
 	if noise1 > 0.25 or noise1 < -0.26 then

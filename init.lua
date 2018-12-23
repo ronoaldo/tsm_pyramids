@@ -1,4 +1,5 @@
 pyramids = {}
+pyramids.max_time = 60 * 30
 local random = math.random
 
 dofile(minetest.get_modpath("tsm_pyramids").."/mummy.lua")
@@ -17,31 +18,29 @@ local chest_stuff = {
 }
 
 function pyramids.fill_chest(pos)
-	minetest.after(2, function()
-		local n = minetest.get_node(pos)
-		if n and n.name and n.name == "default:chest" then
-			local meta = minetest.get_meta(pos)
-			local inv = meta:get_inventory()
-			inv:set_size("main", 8*4)
-			if random(1,10) < 7 then return end
-			local stacks = {}
-			if minetest.get_modpath("treasurer") ~= nil then
-				stacks = treasurer.select_random_treasures(3,1,5,{"armes", "armures", "precieux"})
-			else
-				for i=0,2,1 do
-					local stuff = chest_stuff[random(1,#chest_stuff)]
-					if stuff.name == "farming:bread" and not minetest.get_modpath("farming") then stuff = chest_stuff[1] end
-					table.insert(stacks, {name=stuff.name, count = random(1,stuff.max)})
-				end
+	local n = minetest.get_node(pos)
+	if n and n.name and n.name == "tsm_pyramids:chest" then
+		local meta = minetest.get_meta(pos)
+		local inv = meta:get_inventory()
+		inv:set_size("main", 8*4)
+		inv:set_list("main", { [1] = "", [32] = "" })
+		if random(1,10) < 7 then return end
+		local stacks = {}
+		if minetest.get_modpath("treasurer") ~= nil then
+			stacks = treasurer.select_random_treasures(3,1,5,{"armes", "armures", "precieux"})
+		else
+			for i=0,2,1 do
+				local stuff = chest_stuff[random(1,#chest_stuff)]
+				if stuff.name == "farming:bread" and not minetest.get_modpath("farming") then stuff = chest_stuff[1] end
+				table.insert(stacks, {name=stuff.name, count = random(1,stuff.max)})
 			end
-			for s=1,#stacks do
-				if not inv:contains_item("main", stacks[s]) then
-					inv:set_stack("main", random(1,32), stacks[s])
-				end
-			end
-
 		end
-	end)
+		for s=1,#stacks do
+			if not inv:contains_item("main", stacks[s]) then
+				inv:set_stack("main", random(1,32), stacks[s])
+			end
+		end
+	end
 end
 
 local function add_spawner(pos)
@@ -134,82 +133,86 @@ local function ground(pos, old)
 end
 
 
-minetest.register_on_generated(function(minp, maxp, seed)
-	if maxp.y < 0 then return end
-	math.randomseed(seed)
-	local cnt = 0
+minetest.register_on_generated(
+	function(minp, maxp, seed)
+		minetest.after(
+			3, function(minp, maxp, seed)
+				if maxp.y < 0 then return end
+				math.randomseed(seed)
+				local cnt = 0
+				
+				local perlin1 = minetest.env:get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
+				local noise1 = perlin1:get2d({x=minp.x,y=minp.y})--,z=minp.z})
+				
+				if noise1 > 0.25 or noise1 < -0.26 then
+					local mpos = {x=random(minp.x,maxp.x), y=random(minp.y,maxp.y), z=random(minp.z,maxp.z)}
+					
+					local sands = {"default:desert_sand"}
+					local p2
+					local sand
+					for s=1, #sands do
+						sand = sands[s]
+						p2 = minetest.find_node_near(mpos, 25, sand)
+						while p2 == nil and cnt < 5 do
+							cnt = cnt+1
+							mpos = {x=random(minp.x,maxp.x), y=random(minp.y,maxp.y), z=random(minp.z,maxp.z)}
+							p2 = minetest.find_node_near(mpos, 25, sand)
+						end
+						if p2 ~= nil then
+							break
+						end
+					end
+					if p2 == nil then return end
+					if p2.y < 0 then return end
 
-	local perlin1 = minetest.env:get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
-	local noise1 = perlin1:get2d({x=minp.x,y=minp.y})--,z=minp.z})
-
-	if noise1 > 0.25 or noise1 < -0.26 then
-		local mpos = {x=random(minp.x,maxp.x), y=random(minp.y,maxp.y), z=random(minp.z,maxp.z)}
-
-		local sands = {"default:desert_sand"}
-		local p2
-		local sand
-		for s=1, #sands do
-			sand = sands[s]
-			p2 = minetest.find_node_near(mpos, 25, sand)
-			while p2 == nil and cnt < 5 do
-				cnt = cnt+1
-				mpos = {x=random(minp.x,maxp.x), y=random(minp.y,maxp.y), z=random(minp.z,maxp.z)}
-				p2 = minetest.find_node_near(mpos, 25, sand)
-			end
-			if p2 ~= nil then
-				break
-			end
-		end
-		if p2 == nil then return end
-		if p2.y < 0 then return end
-
-		local off = 0
-		local opos1 = {x=p2.x+22,y=p2.y-1,z=p2.z+22}
-		local opos2 = {x=p2.x+22,y=p2.y-1,z=p2.z}
-		local opos3 = {x=p2.x,y=p2.y-1,z=p2.z+22}
-		local opos1_n = minetest.get_node_or_nil(opos1)
-		local opos2_n = minetest.get_node_or_nil(opos2)
-		local opos3_n = minetest.get_node_or_nil(opos3)
-		if opos1_n and opos1_n.name and opos1_n.name == "air" then
-			p2 = ground(opos1, p2)
-		end
-		if opos2_n and opos2_n.name and opos2_n.name == "air" then
-			p2 = ground(opos2, p2)
-		end
-		if opos3_n and opos3_n.name and opos3_n.name == "air" then
-			p2 = ground(opos3, p2)
-		end
-		p2.y = p2.y - 3
-		if p2.y < 0 then p2.y = 0 end
-		if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or 
-			minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
-			minetest.find_node_near(p2, 52, {"maptools:sandstone_brick"}) ~= nil or
-			minetest.find_node_near(p2, 52, {"maptools:desert_sandstone_brick"}) ~= nil or
-			minetest.find_node_near(p2, 52, {"maptools:silver_sandstone_brick"}) ~= nil or
-			minetest.find_node_near(p2, 52, {"sandplus:desert_sandstonebrick"}) ~= nil
-		then return	end
-	
-		if random(0,10) > 7 then
-			return
-		end
-		local p_type = random(1, 3)
-		local p_pot = {
-			[1] = {"maptools:sandstone_brick", "default:sandstone", "default:sandstone", "default:sand"},
-			[2] = {"maptools:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand"},
-			[3] = {"maptools:silver_sandstone_brick", "default:silver_sandstone", "default:silver_sandstone", "default:silver_sand"}
-		}
-		
-		if sand == "default:desert_sand" then
-			if minetest.get_modpath("sandplus") then
-				minetest.after(0.8, make, p2, "sandplus:desert_sandstonebrick", "sandplus:desert_sandstone", "default:desert_stone", "default:desert_sand")
-			else
-				minetest.after(0.8, make, p2, p_pot[p_type][1], p_pot[p_type][2], p_pot[p_type][3], p_pot[p_type][4])
-			end
-		else
-			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand")
-		end
-	end
-end)
+					local off = 0
+					local opos1 = {x=p2.x+22,y=p2.y-1,z=p2.z+22}
+					local opos2 = {x=p2.x+22,y=p2.y-1,z=p2.z}
+					local opos3 = {x=p2.x,y=p2.y-1,z=p2.z+22}
+					local opos1_n = minetest.get_node_or_nil(opos1)
+					local opos2_n = minetest.get_node_or_nil(opos2)
+					local opos3_n = minetest.get_node_or_nil(opos3)
+					if opos1_n and opos1_n.name and opos1_n.name == "air" then
+						p2 = ground(opos1, p2)
+					end
+					if opos2_n and opos2_n.name and opos2_n.name == "air" then
+						p2 = ground(opos2, p2)
+					end
+					if opos3_n and opos3_n.name and opos3_n.name == "air" then
+						p2 = ground(opos3, p2)
+					end
+					p2.y = p2.y - 3
+					if p2.y < 0 then p2.y = 0 end
+					if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or 
+						minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
+						minetest.find_node_near(p2, 52, {"maptools:sandstone_brick"}) ~= nil or
+						minetest.find_node_near(p2, 52, {"maptools:desert_sandstone_brick"}) ~= nil or
+						minetest.find_node_near(p2, 52, {"maptools:silver_sandstone_brick"}) ~= nil or
+						minetest.find_node_near(p2, 52, {"sandplus:desert_sandstonebrick"}) ~= nil
+					then return	end
+					
+					if random(0,10) > 7 then
+						return
+					end
+					local p_type = random(1, 3)
+					local p_pot = {
+						[1] = {"maptools:sandstone_brick", "default:sandstone", "default:sandstone", "default:sand"},
+						[2] = {"maptools:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand"},
+						[3] = {"maptools:silver_sandstone_brick", "default:silver_sandstone", "default:silver_sandstone", "default:silver_sand"}
+					}
+					
+					if sand == "default:desert_sand" then
+						if minetest.get_modpath("sandplus") then
+							minetest.after(0.8, make, p2, "sandplus:desert_sandstonebrick", "sandplus:desert_sandstone", "default:desert_stone", "default:desert_sand")
+						else
+							minetest.after(0.8, make, p2, p_pot[p_type][1], p_pot[p_type][2], p_pot[p_type][3], p_pot[p_type][4])
+						end
+					else
+						minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand")
+					end
+				end
+				end, minp, maxp, seed)
+	end)
 
 -- Add backwards-compability for nodes from the original pyramids mod
 if minetest.get_modpath("pyramids") == nil then

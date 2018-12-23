@@ -35,6 +35,7 @@ local function replace(str,iy)
 	if iy == 0 and str == "s" then out = "tsm_pyramids:" str = "sun" end
 	if iy == 3 and str == "s" then out = "tsm_pyramids:" str = "men" end
 	if str == "a" then out = "" end
+	if str == "c" then out = "tsm_pyramids:" end
 	if str == "s" then out = "maptools:" end
 	return out..code[str]
 end
@@ -57,7 +58,6 @@ function pyramids.make_room(pos)
 				local p2 = 0
 				if n_str == "c" then
 					if ix < 3 then p2 = 1 else p2 = 3 end
-					pyramids.fill_chest({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz})
 				end
 				minetest.set_node({x=loch.x+ix,y=loch.y-iy,z=loch.z+iz}, {name=replace(n_str,iy), param2=p2})
 			end

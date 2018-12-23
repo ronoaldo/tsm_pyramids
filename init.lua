@@ -93,7 +93,7 @@ local function make(pos, brick, sandstone, stone, sand)
 	for iy=0,10,1 do
 		for ix=iy,22-iy,1 do
 			for iz=iy,22-iy,1 do
-			if iy <1 then underground({x=pos.x+ix,y=pos.y,z=pos.z+iz}, stone, sand) end
+				if iy <1 then underground({x=pos.x+ix,y=pos.y,z=pos.z+iz}, stone, sand) end
 				minetest.set_node({x=pos.x+ix,y=pos.y+iy,z=pos.z+iz}, {name=brick})
 				for yy=1,10-iy,1 do
 					local n = minetest.get_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
@@ -182,20 +182,21 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		p2.y = p2.y - 3
 		if p2.y < 0 then p2.y = 0 end
 		if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or 
-				minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
-				minetest.find_node_near(p2, 52, {"default:sandstonebrick"}) ~= nil or
-				minetest.find_node_near(p2, 52, {"sandplus:desert_sandstonebrick"}) ~= nil then
-			return
-		end
+			minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
+			minetest.find_node_near(p2, 52, {"maptools:sandstone_brick"}) ~= nil or
+			minetest.find_node_near(p2, 52, {"maptools:desert_sandstone_brick"}) ~= nil or
+			minetest.find_node_near(p2, 52, {"maptools:silver_sandstone_brick"}) ~= nil or
+			minetest.find_node_near(p2, 52, {"sandplus:desert_sandstonebrick"}) ~= nil
+		then return	end
 	
 		if random(0,10) > 7 then
 			return
 		end
 		local p_type = random(1, 3)
 		local p_pot = {
-			[1] = {"default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand"},
-			[2] = {"default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand"},
-			[3] = {"default:silver_sandstone_brick", "default:silver_sandstone", "default:silver_sandstone", "default:silver_sand"}
+			[1] = {"maptools:sandstone_brick", "default:sandstone", "default:sandstone", "default:sand"},
+			[2] = {"maptools:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand"},
+			[3] = {"maptools:silver_sandstone_brick", "default:silver_sandstone", "default:silver_sandstone", "default:silver_sand"}
 		}
 		
 		if sand == "default:desert_sand" then

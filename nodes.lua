@@ -20,7 +20,7 @@ for i=1,3 do
 		_doc_items_longdesc = decodesc,
 		tiles = {"default_sandstone.png", "default_sandstone.png", "default_sandstone.png^tsm_pyramids_"..img[i]..".png"},
 		is_ground_content = false,
-		groups = minetest.registered_nodes["default:sandstone"].groups,
+		groups = {unbreakable=1},
 		sounds = default.node_sound_stone_defaults(),
 	})
 end

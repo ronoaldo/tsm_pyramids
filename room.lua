@@ -35,6 +35,7 @@ local function replace(str,iy)
 	if iy == 0 and str == "s" then out = "tsm_pyramids:" str = "sun" end
 	if iy == 3 and str == "s" then out = "tsm_pyramids:" str = "men" end
 	if str == "a" then out = "" end
+	if str == "s" then out = "maptools:" end
 	return out..code[str]
 end
 
@@ -42,8 +43,8 @@ local function replace2(str,iy)
 	local out = "default:"
 	if iy == 0 and str == "l" then out = "tsm_pyramids:" str = "t"
 	elseif iy < 3 and str == "l" then str = "a" end
-
 	if str == "a" then out = "" end
+	if str == "b" then out = "maptools:" end
 	return out..code[str]
 end
 

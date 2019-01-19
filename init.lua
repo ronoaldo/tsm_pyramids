@@ -227,3 +227,5 @@ if minetest.get_modpath("pyramids") == nil then
 	-- FIXME: Entities are currently NOT backwards-compatible
 	-- TODO: Update README when full backwards-compability is achieved
 end
+
+minetest.log("action", "[tsm_pyramids] loaded.")

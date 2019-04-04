@@ -144,7 +144,7 @@ minetest.register_on_generated(
 				local perlin1 = minetest.env:get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
 				local noise1 = perlin1:get2d({x=minp.x,y=minp.y})--,z=minp.z})
 				
-				if noise1 > 0.25 or noise1 < -0.26 then
+				if noise1 > 0.75 or noise1 < -0.76 then
 					local mpos = {x=random(minp.x,maxp.x), y=random(minp.y,maxp.y), z=random(minp.z,maxp.z)}
 					
 					local sands = {"default:desert_sand"}

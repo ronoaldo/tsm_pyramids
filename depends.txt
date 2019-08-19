@@ -1,6 +1,5 @@
 default
 farming?
-sandplus?
 treasurer?
 intllib?
 doc_items?

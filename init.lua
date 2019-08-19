@@ -185,7 +185,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or 
 				minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
 				minetest.find_node_near(p2, 52, {"default:sandstonebrick"}) ~= nil or
-				minetest.find_node_near(p2, 52, {"sandplus:desert_sandstonebrick"}) ~= nil then
+				minetest.find_node_near(p2, 52, {"default:desert_sandstone_brick"}) ~= nil then
 			return
 		end
 	
@@ -193,11 +193,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			return
 		end
 		if sand == "default:desert_sand" then
-			if minetest.get_modpath("sandplus") then
-				minetest.after(0.8, make, p2, "sandplus:desert_sandstonebrick", "sandplus:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
-			else
-				minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
-			end
+			minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
 		else
 			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
 		end

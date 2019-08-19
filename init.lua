@@ -1,3 +1,5 @@
+local S = minetest.get_translator("tsm_pyramids")
+
 tsm_pyramids = {}
 
 dofile(minetest.get_modpath("tsm_pyramids").."/mummy.lua")
@@ -105,7 +107,6 @@ local function make(pos, brick, sandstone, stone, sand, ptype)
 	end
 
 	tsm_pyramids.make_room(pos, ptype)
-	minetest.after(2, tsm_pyramids.make_traps, pos, ptype)
 	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
 	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick)
 end
@@ -213,3 +214,25 @@ if minetest.get_modpath("pyramids") == nil then
 	-- FIXME: Entities are currently NOT backwards-compatible
 	-- TODO: Update README when full backwards-compability is achieved
 end
+
+minetest.register_chatcommand("spawnpyramid", {
+	description = S("Generate a pyramid"),
+		params = "",
+		privs = { server = true },
+		func = function(name, param)
+			local player = minetest.get_player_by_name(name)
+			if not player then
+				return false, S("No player.")
+			end
+			local pos = player:get_pos()
+			pos = vector.round(pos)
+			local r = math.random(1,2)
+			if r == 1 then
+				make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
+			else
+				make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
+			end
+			return true, S("Pyramid generated at @1.", minetest.pos_to_string(pos))
+		end,
+	}
+)

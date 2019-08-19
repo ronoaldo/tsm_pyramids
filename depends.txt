@@ -1,5 +1,0 @@
-default
-farming?
-treasurer?
-doc_items?
-awards?

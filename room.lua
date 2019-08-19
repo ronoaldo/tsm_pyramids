@@ -35,6 +35,7 @@ code_desert["1"] = "deco_stone4"
 code_desert["2"] = "deco_stone5"
 code_desert["3"] = "deco_stone6"
 code_desert["b"] = "desert_sandstone_brick"
+code_desert["t"] = "desert_trap"
 
 local function replace(str, iy, code_table, deco)
 	local out = "default:"

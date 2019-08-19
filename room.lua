@@ -3,22 +3,34 @@ local layout_room = {
 	" ","c"," ","c"," ","c"," ","c"," ",
 	" ","s"," ","s"," ","s"," ","s"," ",
 	" "," "," "," "," "," "," "," "," ",
-	" "," "," "," "," "," "," "," "," ",
+	" "," "," "," "," "," "," "," "," ", -- << entrance on left side
 	" "," "," "," "," "," "," "," "," ",
 	" ","s"," ","s"," ","s"," ","s"," ",
 	" ","c"," ","c"," ","c"," ","c"," ",
 	" "," "," "," "," "," "," "," "," "
 }
 
-local layout_trap = {
+local layout_traps = {
 	"S","S","S","S","S","S","S","S","S",
 	"~","S","~","S","~","S","~","S","S",
 	"~","S","~","S","~","S","~","S","S",
 	"~","S","~","~","~","S","~","~","S",
-	"~","~","S","~","S","~","~","S","S",
+	"~","~","S","~","S","~","~","S","S", -- << entrance on left side
 	"~","S","~","~","~","~","~","~","S",
 	"~","S","~","S","~","S","~","S","S",
 	"~","S","~","S","~","S","~","S","S",
+	"S","S","S","S","S","S","S","S","S"
+}
+
+local layout_traps_template = {
+	"S","S","S","S","S","S","S","S","S",
+	"?","S","?","S","?","S","?","S","S",
+	"?","S","?","S","?","S","?","S","S",
+	"?","?","?","?","?","?","?","?","S",
+	"?","?","?","?","?","?","?","?","S", -- << entrance on left side
+	"?","?","?","?","?","?","?","?","S",
+	"?","S","?","S","?","S","?","S","S",
+	"?","S","?","S","?","S","?","S","S",
 	"S","S","S","S","S","S","S","S","S"
 }
 
@@ -88,16 +100,30 @@ function tsm_pyramids.make_room(pos, stype)
 	end
 end
 
+local shuffle_traps = function(chance)
+	layout_traps = table.copy(layout_traps_template)
+	for a=1, #layout_traps do
+		if layout_traps[a] == "?" then
+			if math.random(1,100) <= chance then
+				layout_traps[a] = "~"
+			else
+				layout_traps[a] = "S"
+			end
+		end
+	end
+end
+
 function tsm_pyramids.make_traps(pos, stype)
 	local code_table = code_sandstone
 	if stype == "desert" then
 		code_table = code_desert
 	end
+	shuffle_traps(math.random(10,100))
 	local hole = {x=pos.x+7,y=pos.y, z=pos.z+7}
 	for iy=0,4,1 do
 		for ix=0,8,1 do
 			for iz=0,8,1 do
-				local n_str = layout_trap[tonumber(ix*9+iz+1)]
+				local n_str = layout_traps[tonumber(ix*9+iz+1)]
 				local p2 = 0
 				minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, code_table), param2=p2})
 			end

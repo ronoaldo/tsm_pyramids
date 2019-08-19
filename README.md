@@ -17,12 +17,12 @@ the extent permitted by applicable law.
 
 ### Source code and textures
 
-* [WTFPL](http://www.wtfpl.net/txt/copying/)
+* [MIT License](https://mit-license.org/)
 * (c) Copyright BlockMen (2013)
 
 ### Mummy model
 
-* WTFPL
+* MIT License
 * (c) Copyright Pavel\_S (2013)
 
 ### Textures
@@ -30,7 +30,7 @@ the extent permitted by applicable law.
 * `tsm_pyramids_eye.png` by bas080, [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)
 * `tsm_pyramids_men.png` by bas080, CC-BY-SA 3.0
 * `tsm_pyramids_sun.png` by bas080, CC-BY-SA 3.0
-* All other: BlockMen, WTFPL
+* All other: BlockMen (MIT License)
 
 ### Sounds
 The authors are ([freesound.org](https://freesound.org)):

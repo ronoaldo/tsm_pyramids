@@ -1,4 +1,4 @@
-pyramids = {}
+tsm_pyramids = {}
 
 dofile(minetest.get_modpath("tsm_pyramids").."/mummy.lua")
 dofile(minetest.get_modpath("tsm_pyramids").."/nodes.lua")
@@ -15,7 +15,7 @@ local chest_stuff = {
 
 }
 
-function pyramids.fill_chest(pos)
+function tsm_pyramids.fill_chest(pos)
 	minetest.after(2, function()
 		local n = minetest.get_node(pos)
 		if n and n.name and n.name == "default:chest" then
@@ -45,7 +45,7 @@ end
 
 local function add_spawner(pos)
 	minetest.set_node(pos, {name="tsm_pyramids:spawner_mummy"})
-	if not minetest.setting_getbool("only_peaceful_mobs") then pyramids.spawn_mummy({x=pos.x,y=pos.y,z=pos.z-2},2) end
+	if not minetest.setting_getbool("only_peaceful_mobs") then tsm_pyramids.spawn_mummy({x=pos.x,y=pos.y,z=pos.z-2},2) end
 end
 
 local function can_replace(pos)
@@ -104,8 +104,8 @@ local function make(pos, brick, sandstone, stone, sand, ptype)
 		end
 	end
 
-	pyramids.make_room(pos, ptype)
-	minetest.after(2, pyramids.make_traps, pos, ptype)
+	tsm_pyramids.make_room(pos, ptype)
+	minetest.after(2, tsm_pyramids.make_traps, pos, ptype)
 	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
 	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick)
 end

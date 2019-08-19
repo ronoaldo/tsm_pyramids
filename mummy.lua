@@ -321,7 +321,7 @@ minetest.register_craftitem("tsm_pyramids:spawn_egg", {
 
 })
 
-function pyramids.spawn_mummy (pos, number)
+function tsm_pyramids.spawn_mummy (pos, number)
 	for i=0,number do
 		minetest.add_entity(pos,"tsm_pyramids:mummy")
 	end

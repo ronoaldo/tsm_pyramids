@@ -55,7 +55,7 @@ local function replace2(str, iy, code_table)
 	return out..code_table[str]
 end
 
-function pyramids.make_room(pos, stype)
+function tsm_pyramids.make_room(pos, stype)
 	local code_table = code_sandstone
 	if stype == "desert" then
 		code_table = code_desert
@@ -76,7 +76,7 @@ function pyramids.make_room(pos, stype)
 				local p2 = 0
 				if n_str == "c" then
 					if ix < 3 then p2 = 1 else p2 = 3 end
-					pyramids.fill_chest({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz})
+					tsm_pyramids.fill_chest({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz})
 				end
 				minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace(n_str, iy, code_table, deco), param2=p2})
 			end
@@ -84,7 +84,7 @@ function pyramids.make_room(pos, stype)
 	end
 end
 
-function pyramids.make_traps(pos, stype)
+function tsm_pyramids.make_traps(pos, stype)
 	local code_table = code_sandstone
 	if stype == "desert" then
 		code_table = code_desert

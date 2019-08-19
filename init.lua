@@ -8,14 +8,27 @@ dofile(minetest.get_modpath("tsm_pyramids").."/room.lua")
 
 local chest_stuff = {
 	{name="default:apple", max = 3},
-	{name="farming:bread", max = 3},
-	{name="default:steel_ingot", max = 2},
+	{name="default:steel_ingot", max = 3},
+	{name="default:copper_ingot", max = 3},
 	{name="default:gold_ingot", max = 2},
 	{name="default:diamond", max = 1},
 	{name="default:pick_steel", max = 1},
-	{name="default:pick_diamond", max = 1}
-
+	{name="default:pick_diamond", max = 1},
+	{name="default:papyrus", max = 9},
 }
+
+if minetest.get_modpath("farming") then
+	table.insert(chest_stuff, {name="farming:bread", max = 3})
+	table.insert(chest_stuff, {name="farming:cotton", max = 8})
+else
+	table.insert(chest_stuff, {name="farming:apple", max = 8})
+	table.insert(chest_stuff, {name="farming:apple", max = 3})
+end
+if minetest.get_modpath("tnt") then
+	table.insert(chest_stuff, {name="tnt:gunpowder", max = 6})
+else
+	table.insert(chest_stuff, {name="farming:apple", max = 3})
+end
 
 function tsm_pyramids.fill_chest(pos)
 	minetest.after(2, function()
@@ -24,14 +37,15 @@ function tsm_pyramids.fill_chest(pos)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			inv:set_size("main", 8*4)
-			if math.random(1,10) < 7 then return end
+			if math.random(1,10) <= 5 then
+				return
+			end
 			local stacks = {}
 			if minetest.get_modpath("treasurer") ~= nil then
 				stacks = treasurer.select_random_treasures(3,7,9,{"minetool", "food", "crafting_component"})
 			else
 				for i=0,2,1 do
 					local stuff = chest_stuff[math.random(1,#chest_stuff)]
-					if stuff.name == "farming:bread" and not minetest.get_modpath("farming") then stuff = chest_stuff[1] end
 					table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
 				end
 			end

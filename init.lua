@@ -45,7 +45,7 @@ end
 
 local function add_spawner(pos)
 	minetest.set_node(pos, {name="tsm_pyramids:spawner_mummy"})
-	if not minetest.setting_getbool("only_peaceful_mobs") then tsm_pyramids.spawn_mummy({x=pos.x,y=pos.y,z=pos.z-2},2) end
+	if not minetest.settings:get_bool("only_peaceful_mobs") then tsm_pyramids.spawn_mummy({x=pos.x,y=pos.y,z=pos.z-2},2) end
 end
 
 local function can_replace(pos)
@@ -141,7 +141,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if not perlin1 then
 		perlin1 = minetest.get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
 	end
-	local noise1 = perlin1:get2d({x=minp.x,y=minp.y})--,z=minp.z})
+	local noise1 = perlin1:get_2d({x=minp.x,y=minp.y})--,z=minp.z})
 
 	if noise1 > 0.25 or noise1 < -0.26 then
 		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}

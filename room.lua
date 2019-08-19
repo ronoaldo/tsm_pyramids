@@ -1,3 +1,5 @@
+local S = minetest.get_translator("tsm_pyramids")
+
 -- ROOM LAYOUTS
 
 local room_types = {
@@ -593,7 +595,7 @@ local function replace2(str, iy, code_table)
 	return out..code_table[str]
 end
 
-function tsm_pyramids.make_room(pos, stype)
+function tsm_pyramids.make_room(pos, stype, room_id)
 	local code_table = code_sandstone
 	if stype == "desert" then
 		code_table = code_desert
@@ -607,8 +609,14 @@ function tsm_pyramids.make_room(pos, stype)
 		table.remove(deco_ids, r)
 	end
 	local hole = {x=pos.x+7,y=pos.y+5, z=pos.z+7}
-	local r = math.random(1, #room_types)
-	local room = room_types[r]
+	if room_id == nil then
+		room_id = math.random(1, #room_types)
+	end
+	local room
+	if room_id < 1 or room_id > #room_types then
+		return false, S("Incorrect room type ID: @1", room_id)
+	end
+	local room = room_types[room_id]
 	if room.style == "yrepeat" then
 		for iy=0,4,1 do
 			for ix=0,8,1 do
@@ -630,11 +638,12 @@ function tsm_pyramids.make_room(pos, stype)
 			end
 		end
 	else
-		minetest.log("error", "Invalid pyramid room style! room_types index="..r)
+		minetest.log("error", "Invalid pyramid room style! room type ID="..r)
 	end
 	if room.traps then
 		tsm_pyramids.make_traps(pos, stype)
 	end
+	return true
 end
 
 local shuffle_traps = function(chance)

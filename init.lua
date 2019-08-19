@@ -89,8 +89,7 @@ local function make_entrance(pos, brick)
 	end
 end
 
-local function make(pos, brick, sandstone, stone, sand, ptype)
-	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
+local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 	for iy=0,10,1 do
 		for ix=iy,22-iy,1 do
 			for iz=iy,22-iy,1 do
@@ -105,10 +104,11 @@ local function make(pos, brick, sandstone, stone, sand, ptype)
 			end
 		end
 	end
-
-	tsm_pyramids.make_room(pos, ptype)
+	local ok, msg = tsm_pyramids.make_room(pos, ptype, room_id)
 	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
 	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick)
+	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
+	return ok, msg
 end
 
 local perl1 = {SEED1 = 9130, OCTA1 = 3,	PERS1 = 0.5, SCAL1 = 250} -- Values should match minetest mapgen V6 desert noise.
@@ -217,7 +217,7 @@ end
 
 minetest.register_chatcommand("spawnpyramid", {
 	description = S("Generate a pyramid"),
-		params = "",
+		params = S("[<room_type>]"),
 		privs = { server = true },
 		func = function(name, param)
 			local player = minetest.get_player_by_name(name)
@@ -226,13 +226,23 @@ minetest.register_chatcommand("spawnpyramid", {
 			end
 			local pos = player:get_pos()
 			pos = vector.round(pos)
-			local r = math.random(1,2)
-			if r == 1 then
-				make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
-			else
-				make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
+			local s = math.random(1,2)
+			local r = tonumber(param)
+			local room_id
+			if r then
+				room_id = r
 			end
-			return true, S("Pyramid generated at @1.", minetest.pos_to_string(pos))
+			local ok, msg
+			if s == 1 then
+				ok, msg = make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone", room_id)
+			else
+				ok, msg = make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert", room_id)
+			end
+			if ok then
+				return true, S("Pyramid generated at @1.", minetest.pos_to_string(pos))
+			else
+				return false, msg
+			end
 		end,
 	}
 )

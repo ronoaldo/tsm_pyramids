@@ -30,23 +30,31 @@ else
 	table.insert(chest_stuff, {name="farming:apple", max = 3})
 end
 
-function tsm_pyramids.fill_chest(pos)
+function tsm_pyramids.fill_chest(pos, stype, flood_sand)
 	minetest.after(2, function()
+		local sand = "default:sand"
+		if stype == "desert" then
+			sand = "default:desert_sand"
+		end
 		local n = minetest.get_node(pos)
 		if n and n.name and n.name == "default:chest" then
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			inv:set_size("main", 8*4)
-			if math.random(1,10) < 7 then
-				return
-			end
 			local stacks = {}
-			if minetest.get_modpath("treasurer") ~= nil then
-				stacks = treasurer.select_random_treasures(3,7,9,{"minetool", "food", "crafting_component"})
-			else
-				for i=0,2,1 do
-					local stuff = chest_stuff[math.random(1,#chest_stuff)]
-					table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
+			-- Fill with sand in sand-flooded pyramids
+			if flood_sand then
+				table.insert(stacks, {name=sand, count = math.random(1,40)})
+			end
+			-- Add treasures
+			if math.random(1,10) >= 7 then
+				if minetest.get_modpath("treasurer") ~= nil then
+					stacks = treasurer.select_random_treasures(3,7,9,{"minetool", "food", "crafting_component"})
+				else
+					for i=0,2,1 do
+						local stuff = chest_stuff[math.random(1,#chest_stuff)]
+						table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
+					end
 				end
 			end
 			for s=1,#stacks do

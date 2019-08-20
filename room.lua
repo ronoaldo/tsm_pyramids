@@ -635,7 +635,7 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 		local filled = 0
 		while filled < 8 do
 			for c=1, #chests do
-				tsm_pyramids.fill_chest(chests[c])
+				tsm_pyramids.fill_chest(chests[c], stype, room.flood_sand ~= false)
 				filled = filled + 1
 			end
 		end

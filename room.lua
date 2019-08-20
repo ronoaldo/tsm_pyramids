@@ -554,13 +554,22 @@ local code_sandstone = {
 	["~"] = "lava_source",
 	["t"] = "trap",
 }
-local code_desert = table.copy(code_sandstone)
-code_desert["s"] = "desert_sandstone"
-code_desert["1"] = "deco_stone4"
-code_desert["2"] = "deco_stone5"
-code_desert["3"] = "deco_stone6"
-code_desert["S"] = "desert_sandstone_brick"
-code_desert["t"] = "desert_trap"
+local code_desert_sandstone = table.copy(code_sandstone)
+code_desert_sandstone["s"] = "desert_sandstone"
+code_desert_sandstone["1"] = "deco_stone4"
+code_desert_sandstone["2"] = "deco_stone5"
+code_desert_sandstone["3"] = "deco_stone6"
+code_desert_sandstone["S"] = "desert_sandstone_brick"
+code_desert_sandstone["t"] = "desert_trap"
+
+local code_desert_stone = table.copy(code_sandstone)
+code_desert_stone["s"] = "desert_stone_block"
+code_desert_stone["1"] = "desert_stone_block"
+code_desert_stone["2"] = "desert_stone_block"
+code_desert_stone["3"] = "desert_stone_block"
+code_desert_stone["S"] = "desert_stonebrick"
+-- TODO: test
+code_desert_stone["t"] = "air"
 
 local function replace(str, iy, code_table, deco, column_style)
 	local out = "default:"
@@ -589,8 +598,10 @@ end
 
 function tsm_pyramids.make_room(pos, stype, room_id)
 	local code_table = code_sandstone
-	if stype == "desert" then
-		code_table = code_desert
+	if stype == "desert_sandstone" then
+		code_table = code_desert_sandstone
+	elseif stype == "desert_stone" then
+		code_table = code_desert_stone
 	end
 	-- Select random deco block
 	local deco_ids = {"1", "2", "3"}
@@ -611,6 +622,9 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 	local room = room_types[room_id]
 	local chests = {}
 	local column_style = math.random(0,4)
+	if stype == "desert_stone" then
+		column_style = 0
+	end
 	if room.style == "yrepeat" then
 		for iy=0,4,1 do
 			for ix=0,8,1 do
@@ -673,8 +687,10 @@ end
 
 function tsm_pyramids.make_traps(pos, stype)
 	local code_table = code_sandstone
-	if stype == "desert" then
-		code_table = code_desert
+	if stype == "desert_sandstone" then
+		code_table = code_desert_sandstone
+	elseif stype == "desert_stone" then
+		code_table = code_desert_stone
 	end
 	shuffle_traps(math.random(10,100))
 	local hole = {x=pos.x+7,y=pos.y, z=pos.z+7}
@@ -692,7 +708,7 @@ end
 function tsm_pyramids.flood_sand(pos, stype)
 	local set_to_sand = {}
 	local nn = "default:sand"
-	if stype == "desert" then
+	if stype == "desert_sandstone" or stype == "desert_stone" then
 		nn = "default:desert_sand"
 	end
 	local hole = {x=pos.x+7,y=pos.y+1, z=pos.z+7}

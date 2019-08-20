@@ -35,7 +35,7 @@ end
 function tsm_pyramids.fill_chest(pos, stype, flood_sand)
 	minetest.after(2, function()
 		local sand = "default:sand"
-		if stype == "desert" then
+		if stype == "desert_sandstone" or stype == "desert_stone" then
 			sand = "default:desert_sand"
 		end
 		local n = minetest.get_node(pos)
@@ -262,7 +262,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		end
 		if sand == "default:desert_sand" then
 			-- Desert sandstone pyramid
-			minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
+			minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone")
 		else
 			-- Sandstone pyramid
 			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
@@ -295,7 +295,7 @@ minetest.register_chatcommand("spawnpyramid", {
 			end
 			local pos = player:get_pos()
 			pos = vector.round(pos)
-			local s = math.random(1,2)
+			local s = math.random(1,3)
 			local r = tonumber(param)
 			local room_id
 			if r then
@@ -303,10 +303,13 @@ minetest.register_chatcommand("spawnpyramid", {
 			end
 			local ok, msg
 			pos = vector.add(pos, {x=-11, y=-1, z=0})
+			s = 3
 			if s == 1 then
 				ok, msg = make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone", room_id)
+			elseif s == 2 then
+				ok, msg = make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone", room_id)
 			else
-				ok, msg = make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert", room_id)
+				ok, msg = make(pos, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "default:desert_sand", "desert_stone", room_id)
 			end
 			if ok then
 				return true, S("Pyramid generated at @1.", minetest.pos_to_string(pos))

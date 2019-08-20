@@ -44,7 +44,7 @@ function tsm_pyramids.fill_chest(pos, stype, flood_sand)
 			local stacks = {}
 			-- Fill with sand in sand-flooded pyramids
 			if flood_sand then
-				table.insert(stacks, {name=sand, count = math.random(1,25)})
+				table.insert(stacks, {name=sand, count = math.random(1,32)})
 			end
 			-- Add treasures
 			if math.random(1,10) >= 7 then

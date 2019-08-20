@@ -1,13 +1,13 @@
 # Pyramids (with Treasurer support) [`tsm_pyramids`]
 
-* Version: 0.6
+* Version: 0.7
 
 ## Description
-This mod adds randomly spawned pyramids in deserts. The pyramids are very rare
-and contain a chest with stuff. Also there are mummys inside, which attack
-the player if found in their radius.
+This is a mod for Minetest Game which adds randomly spawned pyramids in deserts and
+sandstone deserts. The pyramids are very rare and contain chests with stuff.
+Also there are mummies inside, which attack the player if found in their radius.
 
-## For users of the old `pyramids` mod
+## Historic notes
 This mod is a fork of the old `pyramids` mod by BlockMen and intended to be a direct
 (but unofficial) successor of it.
 

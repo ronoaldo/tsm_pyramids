@@ -85,6 +85,7 @@ local MUMMY_DEF = {
 	jump_timer = 0,
 	punch_timer = 0,
 	sound_timer = 0,
+	envdmg_timer = 0,
 	attacker = "",
 	attacking_timer = 0,
 	mob_name = "mummy"
@@ -172,7 +173,8 @@ MUMMY_DEF.on_step = function(self, dtime)
 	self.jump_timer = self.jump_timer + 0.01
 	self.punch_timer = self.punch_timer + 0.01
 	self.attacking_timer = self.attacking_timer + 0.01
-	self.sound_timer = self.sound_timer + 0.01
+	self.sound_timer = self.sound_timer + dtime + 0.01
+	self.envdmg_timer = self.envdmg_timer + 0.01
 
 	local current_pos = self.object:get_pos()
 	local current_node = minetest.get_node(current_pos)
@@ -184,12 +186,32 @@ MUMMY_DEF.on_step = function(self, dtime)
 		minetest.sound_play(sound_dead, {pos = current_pos, max_hear_distance = 10 , gain = 0.3})
 		self.object:remove()
 	end
-	if current_node.name == "default:water_source" or current_node.name == "default:water_flowing" or current_node.name == "default:lava_source" or current_node.name == "default:lava_flowing" then
-		self.sound_timer = self.sound_timer + dtime
-		if self.sound_timer >= 0.8 then
-			self.sound_timer = 0
-			self.object:set_hp(self.object:get_hp()-5)
+	local def = minetest.registered_nodes[current_node.name]
+	local dps = def.damage_per_second
+	local dmg = 0
+	if dps ~= nil and dps > 0 then
+		dmg = dps
+	end
+	-- Damage from node
+	if dmg < 4 and (minetest.get_item_group(current_node.name, "water") ~= 0 or minetest.get_item_group(current_node.name, "lava") ~= 0) then
+		dmg = 4
+	end
+	-- Damage by suffocation
+	if (def.walkable == nil or def.walkable == true)
+	and (def.drowning == nil or def.drowning == 0)
+	and (def.damage_per_second == nil or def.damage_per_second <= 0)
+	and (def.collision_box == nil or def.collision_box.type == "regular")
+	and (def.node_box == nil or def.node_box.type == "regular")
+	and (def.groups and def.groups.disable_suffocation ~= 1) then
+		dmg = dmg + 1
+	end
+	self.envdmg_timer = self.envdmg_timer + dtime
+	if dmg > 0 then
+		if self.envdmg_timer >= 1 then
+			self.envdmg_timer = 0
+			self.object:set_hp(self.object:get_hp()-dmg)
 			hit(self)
+			self.sound_timer = 0
 			minetest.sound_play(sound_hit, {pos = current_pos, max_hear_distance = 10, gain = 0.3})
 		end
 	 else

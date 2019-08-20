@@ -52,10 +52,12 @@ local function hit(self)
 		textures = {"tsm_pyramids_mummy.png^tsm_pyramids_hit.png"},
 	}
 	self.object:set_properties(prop)
-	minetest.after(0.4, function()
-               local prop = {textures = mummy_texture,}
-		self.object:set_properties(prop)
-	end)
+	minetest.after(0.4, function(self)
+		local prop = {textures = mummy_texture,}
+		if self.object ~= nil then
+			self.object:set_properties(prop)
+		end
+	end, self)
 end
 
 local function mummy_update_visuals_def(self)

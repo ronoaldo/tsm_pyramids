@@ -289,6 +289,7 @@ minetest.register_chatcommand("spawnpyramid", {
 				room_id = r
 			end
 			local ok, msg
+			pos = vector.add(pos, {x=-11, y=-1, z=0})
 			if s == 1 then
 				ok, msg = make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone", room_id)
 			else

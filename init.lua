@@ -194,7 +194,6 @@ end
 minetest.register_on_generated(function(minp, maxp, seed)
 	if maxp.y < 0 then return end
 	math.randomseed(seed)
-	local cnt = 0
 	if not perlin1 then
 		perlin1 = minetest.get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
 	end
@@ -203,19 +202,26 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if noise1 > 0.25 or noise1 < -0.26 then
 		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
 
-		local sands = {"default:desert_sand", "default:sand"}
+		local sands = {"default:sand", "default:desert_sand"}
 		local p2
+		local psand = {}
 		local sand
+		local cnt = 0
+		local cnt_min = 100
 		for s=1, #sands do
+			cnt = 0
 			sand = sands[s]
-			p2 = minetest.find_node_near(mpos, 25, sand)
-			while p2 == nil and cnt < 5 do
+			psand[s] = minetest.find_node_near(mpos, 25, sand)
+			while psand == nil and cnt < 5 do
 				cnt = cnt+1
 				mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
-				p2 = minetest.find_node_near(mpos, 25, sand)
+				psand[s] = minetest.find_node_near(mpos, 25, sand)
 			end
-			if p2 ~= nil then
-				break
+			if psand[s] ~= nil then
+				if cnt < cnt_min then
+					cnt_min = cnt
+					p2 = psand[s]
+				end
 			end
 		end
 		if p2 == nil then return end
@@ -245,7 +251,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 				minetest.find_node_near(p2, 52, {"default:desert_sandstone_brick"}) ~= nil then
 			return
 		end
-	
+
 		if math.random(0,10) > 7 then
 			return
 		end

@@ -643,7 +643,14 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 	if room.traps then
 		tsm_pyramids.make_traps(pos, stype)
 	end
-	return true
+	local sanded = false
+	if room.flood_sand ~= false then
+		if math.random(1,8) == 1 then
+			tsm_pyramids.flood_sand(pos, stype)
+			sanded = true
+		end
+	end
+	return true, nil, sanded
 end
 
 local shuffle_traps = function(chance)
@@ -676,3 +683,27 @@ function tsm_pyramids.make_traps(pos, stype)
 		end
 	end
 end
+
+function tsm_pyramids.flood_sand(pos, stype)
+	local nn = "default:sand"
+	if stype == "desert" then
+		nn = "default:desert_sand"
+	end
+	local hole = {x=pos.x+7,y=pos.y+1, z=pos.z+7}
+	local maxh = math.random(1,4)
+	local chance = math.random(1,7)
+	for ix=0,8,1 do
+		for iz=0,8,1 do
+			if math.random(1,chance) == 1 then
+				local h = math.random(1,maxh)
+				for iy=0,h,1 do
+					local p = {x=hole.x+ix,y=hole.y+iy,z=hole.z+iz}
+					if minetest.get_node(p).name == "air" then
+						minetest.set_node(p, {name=nn})
+					end
+				end
+			end
+		end
+	end
+end
+

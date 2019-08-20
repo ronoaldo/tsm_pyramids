@@ -89,11 +89,17 @@ local function underground(pos, stone, sand)
 	end
 end
 
-local function make_entrance(pos, brick)
+local function make_entrance(pos, brick, sand, flood_sand)
 	local gang = {x=pos.x+10,y=pos.y, z=pos.z}
-	for iy=2,3,1 do
-		for iz=0,6,1 do
-			minetest.remove_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz})
+	local max_sand_height = math.random(1,3)
+	for iz=0,6,1 do
+		local sand_height = math.random(1,max_sand_height)
+		for iy=2,3,1 do
+			if flood_sand and iy <= sand_height and iz >= 3 then
+				minetest.set_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz}, {name=sand})
+			else
+				minetest.remove_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz})
+			end
 			if iz >=3 and iy == 3 then
 				minetest.set_node({x=gang.x,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
 				minetest.set_node({x=gang.x+1,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
@@ -118,9 +124,9 @@ local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 			end
 		end
 	end
-	local ok, msg = tsm_pyramids.make_room(pos, ptype, room_id)
+	local ok, msg, flood_sand = tsm_pyramids.make_room(pos, ptype, room_id)
 	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
-	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick)
+	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick, sand, flood_sand)
 	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
 	return ok, msg
 end

@@ -690,6 +690,7 @@ function tsm_pyramids.make_traps(pos, stype)
 end
 
 function tsm_pyramids.flood_sand(pos, stype)
+	local set_to_sand = {}
 	local nn = "default:sand"
 	if stype == "desert" then
 		nn = "default:desert_sand"
@@ -704,11 +705,12 @@ function tsm_pyramids.flood_sand(pos, stype)
 				for iy=0,h,1 do
 					local p = {x=hole.x+ix,y=hole.y+iy,z=hole.z+iz}
 					if minetest.get_node(p).name == "air" then
-						minetest.set_node(p, {name=nn})
+						table.insert(set_to_sand, p)
 					end
 				end
 			end
 		end
 	end
+	minetest.bulk_set_node(set_to_sand, {name=nn})
 end
 

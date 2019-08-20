@@ -83,16 +83,16 @@ local function can_replace(pos)
 	end
 end
 
-local function underground(pos, stone, sand)
+local function make_foundation_part(pos, set_to_stone)
 	local p2 = pos
 	local cnt = 0
-	local mat = stone
 	p2.y = p2.y-1
 	while can_replace(p2)==true do
 		cnt = cnt+1
-		if cnt > 25 then break end
-		if cnt>math.random(2,4) then mat = stone end
-		minetest.set_node(p2, {name=mat})
+		if cnt > 25 then
+			break
+		end
+		table.insert(set_to_stone, table.copy(p2))
 		p2.y = p2.y-1
 	end
 end
@@ -117,22 +117,35 @@ local function make_entrance(pos, brick, sand, flood_sand)
 	end
 end
 
-local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
+local function make_pyramid(pos, brick, sandstone, stone, sand)
+	local set_to_brick = {}
+	local set_to_sand = {}
+	local set_to_stone = {}
 	-- Build pyramid
 	for iy=0,math.random(10,11),1 do
 		for ix=iy,22-iy,1 do
 			for iz=iy,22-iy,1 do
-			if iy <1 then underground({x=pos.x+ix,y=pos.y,z=pos.z+iz}, stone, sand) end
-				minetest.set_node({x=pos.x+ix,y=pos.y+iy,z=pos.z+iz}, {name=brick})
+				if iy < 1 then
+					make_foundation_part({x=pos.x+ix,y=pos.y,z=pos.z+iz}, set_to_stone)
+				end
+				table.insert(set_to_brick, {x=pos.x+ix,y=pos.y+iy,z=pos.z+iz})
 				for yy=1,10-iy,1 do
 					local n = minetest.get_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
 					if n and n.name and n.name == stone then
-						minetest.set_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz},{name=sand})
+						table.insert(set_to_sand, {x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
 					end
 				end
 			end
 		end
 	end
+	minetest.bulk_set_node(set_to_stone , {name=stone})
+	minetest.bulk_set_node(set_to_brick, {name=brick})
+	minetest.bulk_set_node(set_to_sand, {name=sand})
+end
+
+local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
+	-- Build pyramid
+	make_pyramid(pos, brick, sandstone, stone, sand)
 	-- Build room
 	local ok, msg, flood_sand = tsm_pyramids.make_room(pos, ptype, room_id)
 	-- Place mummy spawner

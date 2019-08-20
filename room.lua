@@ -247,21 +247,6 @@ local room_types = {
 			" "," "," "," "," "," "," "," "," ",
 		},
 	},
-	-- simple
-	{
-		style = "yrepeat",
-		layout = {
-			" "," "," "," "," "," "," "," ","<",
-			" "," "," "," "," "," "," "," ","<",
-			" "," "," "," "," "," "," "," ","<",
-			" "," "," "," "," "," "," "," ","<",
-			" "," "," "," "," "," "," "," "," ",
-			" "," "," "," "," "," "," "," ","<",
-			" "," "," "," "," "," "," "," ","<",
-			" "," "," "," "," "," "," "," ","<",
-			" "," "," "," "," "," "," "," ","<",
-		},
-	},
 	-- big pillar
 	{
 		style = "yrepeat",
@@ -617,6 +602,7 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 		return false, S("Incorrect room type ID: @1", room_id)
 	end
 	local room = room_types[room_id]
+	local chests = {}
 	if room.style == "yrepeat" then
 		for iy=0,4,1 do
 			for ix=0,8,1 do
@@ -632,13 +618,27 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 					elseif n_str == "v" then
 						p2 = 3
 					end
-					tsm_pyramids.fill_chest({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz})
-					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace(n_str, iy, code_table, deco), param2=p2})
+					local cpos = {x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}
+					local nn = replace(n_str, iy, code_table, deco)
+					minetest.set_node(cpos, {name=nn, param2=p2})
+					if nn == "default:chest" then
+						table.insert(chests, cpos)
+					end
 				end
 			end
 		end
 	else
 		minetest.log("error", "Invalid pyramid room style! room type ID="..r)
+	end
+	if #chests > 0 then
+		-- Make at least 8 attempts to fill chests
+		local filled = 0
+		while filled < 8 do
+			for c=1, #chests do
+				tsm_pyramids.fill_chest(chests[c])
+				filled = filled + 1
+			end
+		end
 	end
 	if room.traps then
 		tsm_pyramids.make_traps(pos, stype)

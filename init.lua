@@ -37,7 +37,7 @@ function tsm_pyramids.fill_chest(pos)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			inv:set_size("main", 8*4)
-			if math.random(1,10) <= 5 then
+			if math.random(1,10) < 7 then
 				return
 			end
 			local stacks = {}

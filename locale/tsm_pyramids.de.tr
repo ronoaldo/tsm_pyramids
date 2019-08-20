@@ -18,3 +18,7 @@ This brick is old, porous and unstable and is barely able to hold itself. One sh
 This old porous brick falls under its own weight.=Dieser alte poröse Ziegel fällt unter seinem eigenem Gewicht.
 No more mummies!=Keine Mumien mehr!
 Destroy a mummy spawner by digging.=Zerstören Sie einen Mumien-Spawner, indem Sie ihn graben.
+Generate a pyramid=Eine Pyramide erzeugen
+[<room_type>]=[<Raumtyp>]
+Pyramid generated at @1.=Pyramide erzeugt bei @1.
+Incorrect room type ID: @1=Ungültige Raumtyp-ID: @1

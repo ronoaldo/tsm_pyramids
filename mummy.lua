@@ -147,7 +147,7 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 	if puncher ~= nil then
 		local sound = sound_hit
 		if self.object:get_hp() == 0 then sound = sound_dead end
-		minetest.sound_play(sound, {to_player = puncher:get_player_name(), loop = false, gain = 0.3})
+		minetest.sound_play(sound, {to_player = puncher:get_player_name(), loop = false, gain = 0.4})
 		if time_from_last_punch >= 0.45 then
 			hit(self)
 			self.direction = {x=self.object:get_velocity().x, y=self.object:get_velocity().y, z=self.object:get_velocity().z}

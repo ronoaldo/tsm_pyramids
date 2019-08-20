@@ -6,6 +6,8 @@ dofile(minetest.get_modpath("tsm_pyramids").."/mummy.lua")
 dofile(minetest.get_modpath("tsm_pyramids").."/nodes.lua")
 dofile(minetest.get_modpath("tsm_pyramids").."/room.lua")
 
+local mg_name = minetest.get_mapgen_setting("mg_name")
+
 local chest_stuff = {
 	{name="default:apple", max = 3},
 	{name="default:steel_ingot", max = 3},
@@ -255,9 +257,14 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		if math.random(0,10) > 7 then
 			return
 		end
+		if (mg_name == "v6" and math.random(1, 2) == 1) then
+			sand = "default:sand"
+		end
 		if sand == "default:desert_sand" then
+			-- Desert sandstone pyramid
 			minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert")
 		else
+			-- Sandstone pyramid
 			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
 		end
 	end

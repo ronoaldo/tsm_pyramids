@@ -174,7 +174,6 @@ MUMMY_DEF.on_step = function(self, dtime)
 	self.punch_timer = self.punch_timer + 0.01
 	self.attacking_timer = self.attacking_timer + 0.01
 	self.sound_timer = self.sound_timer + dtime + 0.01
-	self.envdmg_timer = self.envdmg_timer + 0.01
 
 	local current_pos = self.object:get_pos()
 	local current_node = minetest.get_node(current_pos)

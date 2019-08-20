@@ -562,11 +562,18 @@ code_desert["3"] = "deco_stone6"
 code_desert["S"] = "desert_sandstone_brick"
 code_desert["t"] = "desert_trap"
 
-local function replace(str, iy, code_table, deco)
+local function replace(str, iy, code_table, deco, column_style)
 	local out = "default:"
 	if iy < 4 and (str == "<" or str == ">" or str == "^" or str == "v") then str = " " end
-	if iy == 0 and str == "s" then out = "tsm_pyramids:" str = deco[1] end
-	if iy == 3 and str == "s" then out = "tsm_pyramids:" str = deco[2] end
+	if column_style == 1 or column_style == 2 then
+		if iy == 0 and str == "s" then out = "tsm_pyramids:" str = deco[1] end
+		if iy == 3 and str == "s" then out = "tsm_pyramids:" str = deco[2] end
+	elseif column_style == 3 then
+		if iy == 0 and str == "s" then out = "tsm_pyramids:" str = deco[1] end
+		if iy == 2 and str == "s" then out = "tsm_pyramids:" str = deco[2] end
+	elseif column_style == 4 then
+		if iy == 2 and str == "s" then out = "tsm_pyramids:" str = deco[1] end
+	end
 	if str == " " then out = "" end
 	return out..code_table[str]
 end
@@ -603,6 +610,7 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 	end
 	local room = room_types[room_id]
 	local chests = {}
+	local column_style = math.random(0,4)
 	if room.style == "yrepeat" then
 		for iy=0,4,1 do
 			for ix=0,8,1 do
@@ -619,7 +627,7 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 						p2 = 3
 					end
 					local cpos = {x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}
-					local nn = replace(n_str, iy, code_table, deco)
+					local nn = replace(n_str, iy, code_table, deco, column_style)
 					minetest.set_node(cpos, {name=nn, param2=p2})
 					if nn == "default:chest" then
 						table.insert(chests, cpos)

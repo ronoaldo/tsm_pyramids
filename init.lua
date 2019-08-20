@@ -105,7 +105,7 @@ local function make_entrance(pos, brick, sand, flood_sand)
 	for iz=0,6,1 do
 		local sand_height = math.random(1,max_sand_height)
 		for iy=2,3,1 do
-			if flood_sand and iy <= sand_height and iz >= 3 then
+			if flood_sand and sand ~= "ignore" and iy <= sand_height and iz >= 3 then
 				minetest.set_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz}, {name=sand})
 			else
 				minetest.remove_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz})
@@ -131,10 +131,12 @@ local function make_pyramid(pos, brick, sandstone, stone, sand)
 					make_foundation_part({x=pos.x+ix,y=pos.y,z=pos.z+iz}, set_to_stone)
 				end
 				table.insert(set_to_brick, {x=pos.x+ix,y=pos.y+iy,z=pos.z+iz})
-				for yy=1,10-iy,1 do
-					local n = minetest.get_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
-					if n and n.name and n.name == stone then
-						table.insert(set_to_sand, {x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
+				if sand ~= "ignore" then
+					for yy=1,10-iy,1 do
+						local n = minetest.get_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
+						if n and n.name and n.name == stone then
+							table.insert(set_to_sand, {x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
+						end
 					end
 				end
 			end
@@ -142,7 +144,9 @@ local function make_pyramid(pos, brick, sandstone, stone, sand)
 	end
 	minetest.bulk_set_node(set_to_stone , {name=stone})
 	minetest.bulk_set_node(set_to_brick, {name=brick})
-	minetest.bulk_set_node(set_to_sand, {name=sand})
+	if sand ~= "ignore" then
+		minetest.bulk_set_node(set_to_sand, {name=sand})
+	end
 end
 
 local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
@@ -307,11 +311,14 @@ minetest.register_chatcommand("spawnpyramid", {
 			local ok, msg
 			pos = vector.add(pos, {x=-11, y=-1, z=0})
 			if s == 1 then
+				-- Sandstone
 				ok, msg = make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone", room_id)
 			elseif s == 2 then
+				-- Desert sandstone
 				ok, msg = make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone", room_id)
 			else
-				ok, msg = make(pos, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "default:desert_sand", "desert_stone", room_id)
+				-- Desert stone
+				ok, msg = make(pos, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "ignore", "desert_stone", room_id)
 			end
 			if ok then
 				return true, S("Pyramid generated at @1.", minetest.pos_to_string(pos))

@@ -648,7 +648,7 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 	else
 		minetest.log("error", "Invalid pyramid room style! room type ID="..r)
 	end
-	local sanded = room.flood_sand ~= false and math.random(1,8) == 1
+	local sanded = room.flood_sand ~= false and stype ~= "desert_stone" and math.random(1,8) == 1
 	if #chests > 0 then
 		-- Make at least 8 attempts to fill chests
 		local filled = 0

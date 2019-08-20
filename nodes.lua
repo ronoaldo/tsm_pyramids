@@ -67,7 +67,12 @@ minetest.register_node("tsm_pyramids:trap", {
 	end,
 	_tsm_pyramids_crack = 1,
 	on_timer = trap_on_timer,
-	drop = "",
+	drop = {
+		items = {
+			{ items = { "default:sand" }, rarity = 1 },
+			{ items = { "default:sand" }, rarity = 2 },
+		},
+	}
 })
 
 minetest.register_node("tsm_pyramids:trap_2", {
@@ -77,7 +82,12 @@ minetest.register_node("tsm_pyramids:trap_2", {
 	is_ground_content = false,
 	groups = {crumbly=3,cracky=3,falling_node=1,not_in_creative_inventory=1},
 	sounds = default.node_sound_stone_defaults(),
-	drop = "",
+	drop = {
+		items = {
+			{ items = { "default:sand" }, rarity = 1 },
+			{ items = { "default:sand" }, rarity = 2 },
+		},
+	}
 })
 
 minetest.register_node("tsm_pyramids:desert_trap", {
@@ -92,7 +102,12 @@ minetest.register_node("tsm_pyramids:desert_trap", {
 	end,
 	_tsm_pyramids_crack = 1,
 	on_timer = trap_on_timer,
-	drop = "",
+	drop = {
+		items = {
+			{ items = { "default:desert_sand" }, rarity = 1 },
+			{ items = { "default:desert_sand" }, rarity = 2 },
+		},
+	}
 })
 
 minetest.register_node("tsm_pyramids:desert_trap_2", {
@@ -102,5 +117,10 @@ minetest.register_node("tsm_pyramids:desert_trap_2", {
 	is_ground_content = false,
 	groups = {crumbly=3,cracky=3,falling_node=1,not_in_creative_inventory=1},
 	sounds = default.node_sound_stone_defaults(),
-	drop = "",
+	drop = {
+		items = {
+			{ items = { "default:desert_sand" }, rarity = 1 },
+			{ items = { "default:desert_sand" }, rarity = 2 },
+		},
+	}
 })

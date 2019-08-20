@@ -343,7 +343,11 @@ minetest.register_craftitem("tsm_pyramids:spawn_egg", {
 })
 
 function tsm_pyramids.spawn_mummy (pos, number)
-	for i=0,number do
+	local node = minetest.get_node(pos)
+	if node.name ~= "air" then
+		return
+	end
+	for _=1, number do
 		minetest.add_entity(pos,"tsm_pyramids:mummy")
 	end
 end
@@ -400,7 +404,11 @@ if not minetest.settings:get_bool("only_peaceful_mobs") then
 				if mobs < spawner_max_mobs then
 					pos.x = pos.x+1
 					local p = minetest.find_node_near(pos, 5, {"air"})
-					minetest.add_entity(p,"tsm_pyramids:mummy")
+					local p2 = {x=pos.x, y=pos.y+1, z=pos.z}
+					local n2 = minetest.get_node(p2)
+					if n2.name == "air" then
+						tsm_pyramids.spawn_mummy(p, 1)
+					end
 				end
 			end
 		end

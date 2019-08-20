@@ -67,9 +67,9 @@ function tsm_pyramids.fill_chest(pos, stype, flood_sand)
 	end)
 end
 
-local function add_spawner(pos)
+local function add_spawner(pos, mummy_offset)
 	minetest.set_node(pos, {name="tsm_pyramids:spawner_mummy"})
-	if not minetest.settings:get_bool("only_peaceful_mobs") then tsm_pyramids.spawn_mummy({x=pos.x,y=pos.y,z=pos.z-2},2) end
+	if not minetest.settings:get_bool("only_peaceful_mobs") then tsm_pyramids.spawn_mummy(vector.add(pos, mummy_offset),2) end
 end
 
 local function can_replace(pos)
@@ -118,6 +118,7 @@ local function make_entrance(pos, brick, sand, flood_sand)
 end
 
 local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
+	-- Build pyramid
 	for iy=0,10,1 do
 		for ix=iy,22-iy,1 do
 			for iz=iy,22-iy,1 do
@@ -132,16 +133,23 @@ local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 			end
 		end
 	end
+	-- Build room
 	local ok, msg, flood_sand = tsm_pyramids.make_room(pos, ptype, room_id)
+	-- Place mummy spawner
 	local r = math.random(1,3)
 	if r == 1 then
-		add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
+		-- front
+		add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17}, {x=0, y=0, z=-2})
 	elseif r == 2 then
-		add_spawner({x=pos.x+17,y=pos.y+2, z=pos.z+11})
+		-- right
+		add_spawner({x=pos.x+17,y=pos.y+2, z=pos.z+11}, {x=-2, y=0, z=0})
 	else
-		add_spawner({x=pos.x+5,y=pos.y+2, z=pos.z+11})
+		-- left
+		add_spawner({x=pos.x+5,y=pos.y+2, z=pos.z+11}, {x=2, y=0, z=0})
 	end
+	-- Build entrance
 	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick, sand, flood_sand)
+	-- Done
 	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
 	return ok, msg
 end

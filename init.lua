@@ -133,7 +133,14 @@ local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 		end
 	end
 	local ok, msg, flood_sand = tsm_pyramids.make_room(pos, ptype, room_id)
-	add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
+	local r = math.random(1,3)
+	if r == 1 then
+		add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17})
+	elseif r == 2 then
+		add_spawner({x=pos.x+17,y=pos.y+2, z=pos.z+11})
+	else
+		add_spawner({x=pos.x+5,y=pos.y+2, z=pos.z+11})
+	end
 	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick, sand, flood_sand)
 	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
 	return ok, msg

@@ -204,7 +204,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if noise1 > 0.25 or noise1 < -0.26 then
 		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
 
-		local sands = {"default:sand", "default:desert_sand"}
+		local sands = {"default:sand", "default:desert_sand", "default:desert_stone"}
 		local p2
 		local psand = {}
 		local sand
@@ -257,15 +257,18 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		if math.random(0,10) > 7 then
 			return
 		end
-		if (mg_name == "v6" and math.random(1, 2) == 1) then
+		if (mg_name == "v6" and sand == "default:desert_sand" and math.random(1, 2) == 1) then
 			sand = "default:sand"
 		end
 		if sand == "default:desert_sand" then
 			-- Desert sandstone pyramid
 			minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone")
-		else
+		elseif sand == "default:sand" then
 			-- Sandstone pyramid
 			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
+		else
+			-- Desert stone pyramid
+			minetest.after(0.8, make, p2, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "default:desert_sand", "desert_stone")
 		end
 	end
 end)
@@ -303,7 +306,6 @@ minetest.register_chatcommand("spawnpyramid", {
 			end
 			local ok, msg
 			pos = vector.add(pos, {x=-11, y=-1, z=0})
-			s = 3
 			if s == 1 then
 				ok, msg = make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone", room_id)
 			elseif s == 2 then

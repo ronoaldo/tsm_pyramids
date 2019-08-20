@@ -119,7 +119,7 @@ end
 
 local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 	-- Build pyramid
-	for iy=0,10,1 do
+	for iy=0,math.random(10,11),1 do
 		for ix=iy,22-iy,1 do
 			for iz=iy,22-iy,1 do
 			if iy <1 then underground({x=pos.x+ix,y=pos.y,z=pos.z+iz}, stone, sand) end

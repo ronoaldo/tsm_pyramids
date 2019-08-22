@@ -2,6 +2,8 @@ local S = minetest.get_translator("tsm_pyramids")
 
 -- ROOM LAYOUTS
 
+local ROOM_WIDTH = 9
+
 local room_types = {
 	-- Pillar room
 	{
@@ -587,7 +589,45 @@ local function replace2(str, iy, code_table)
 	return out..code_table[str]
 end
 
-function tsm_pyramids.make_room(pos, stype, room_id)
+local function get_flat_index(x, y, width)
+	return 1 + x + y * width
+end
+
+local function rotate_layout_single(layout, width)
+	local size = width*width
+	local new_layout = {}
+	for x=0, width-1 do
+		for y=0, width-1 do
+			local symbol = layout[get_flat_index((width-1) - y, x, width)]
+			-- Rotate chest
+			if symbol == "^" then
+				symbol = "<"
+			elseif symbol == "<" then
+				symbol = "v"
+			elseif symbol == "v" then
+				symbol = ">"
+			elseif symbol == ">" then
+				symbol = "^"
+			end
+			new_layout[get_flat_index(x, y, width)] = symbol
+		end
+	end
+	return new_layout
+end
+
+local function rotate_layout(layout, width, rotations)
+	local new_layout = table.copy(layout)
+	for r=1, rotations do
+		new_layout = rotate_layout_single(new_layout, width)
+	end
+	return new_layout
+end
+
+-- pos: Position to spawn pyramid
+-- stype: Sand type ("sandstone" or "desert")
+-- room_id: Room layout identified (see list of rooms above)
+-- rotations: Number of times to rotate the room (0-3)
+function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	local code_table = code_sandstone
 	if stype == "desert" then
 		code_table = code_desert
@@ -608,14 +648,15 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 	if room_id < 1 or room_id > #room_types then
 		return false, S("Incorrect room type ID: @1", room_id)
 	end
-	local room = room_types[room_id]
+	local room = table.copy(room_types[room_id])
 	local chests = {}
 	local column_style = math.random(0,4)
+	local layout = rotate_layout(room.layout, ROOM_WIDTH, rotations)
 	if room.style == "yrepeat" then
 		for iy=0,4,1 do
 			for ix=0,8,1 do
 				for iz=0,8,1 do
-					local n_str = room.layout[tonumber(ix*9+iz+1)]
+					local n_str = layout[tonumber(ix*9+iz+1)]
 					local p2 = 0
 					if n_str == "<" then
 						p2 = 0
@@ -650,7 +691,7 @@ function tsm_pyramids.make_room(pos, stype, room_id)
 		end
 	end
 	if room.traps then
-		tsm_pyramids.make_traps(pos, stype)
+		tsm_pyramids.make_traps(pos, stype, rotations)
 	end
 	if sanded then
 		tsm_pyramids.flood_sand(pos, stype)
@@ -671,17 +712,18 @@ local shuffle_traps = function(chance)
 	end
 end
 
-function tsm_pyramids.make_traps(pos, stype)
+function tsm_pyramids.make_traps(pos, stype, rotations)
 	local code_table = code_sandstone
 	if stype == "desert" then
 		code_table = code_desert
 	end
 	shuffle_traps(math.random(10,100))
 	local hole = {x=pos.x+7,y=pos.y, z=pos.z+7}
+	local layout = rotate_layout(layout_traps, ROOM_WIDTH, rotations)
 	for iy=0,4,1 do
 		for ix=0,8,1 do
 			for iz=0,8,1 do
-				local n_str = layout_traps[tonumber(ix*9+iz+1)]
+				local n_str = layout[tonumber(ix*9+iz+1)]
 				local p2 = 0
 				minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, code_table), param2=p2})
 			end

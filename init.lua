@@ -99,21 +99,46 @@ local function make_foundation_part(pos, set_to_stone)
 	end
 end
 
-local function make_entrance(pos, brick, sand, flood_sand)
-	local gang = {x=pos.x+10,y=pos.y, z=pos.z}
+local function make_entrance(pos, rot, brick, sand, flood_sand)
+	local roffset_arr = {
+		{ x=0, y=0, z=1 }, -- front
+		{ x=-1, y=0, z=0 }, -- left
+		{ x=0, y=0, z=-1 }, -- back
+		{ x=1, y=0, z=0 }, -- right
+	}
+	local roffset = roffset_arr[rot + 1]
+	local way
+	if rot == 0 then
+		way = vector.add(pos, {x=11, y=0, z=0})
+	elseif rot == 1 then
+		way = vector.add(pos, {x=22, y=0, z=11})
+	elseif rot == 2 then
+		way = vector.add(pos, {x=11, y=0, z=22})
+	else
+		way = vector.add(pos, {x=0, y=0, z=11})
+	end
 	local max_sand_height = math.random(1,3)
-	for iz=0,6,1 do
+	for ie=0,6,1 do
 		local sand_height = math.random(1,max_sand_height)
 		for iy=2,3,1 do
-			if flood_sand and iy <= sand_height and iz >= 3 then
-				minetest.set_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz}, {name=sand})
+			-- dig hallway
+			local way_dir = vector.add(vector.add(way, {x=0,y=iy,z=0}), vector.multiply(roffset, ie))
+			if flood_sand and iy <= sand_height and ie >= 3 then
+				minetest.set_node(way_dir, {name=sand})
 			else
-				minetest.remove_node({x=gang.x+1,y=gang.y+iy,z=gang.z+iz})
+				minetest.remove_node(way_dir)
 			end
-			if iz >=3 and iy == 3 then
-				minetest.set_node({x=gang.x,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
-				minetest.set_node({x=gang.x+1,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
-				minetest.set_node({x=gang.x+2,y=gang.y+iy+1,z=gang.z+iz}, {name=brick})
+			-- build decoration above entrance
+			if ie >=3 and iy == 3 then
+				local deco = {x=way_dir.x, y=way_dir.y+1,z=way_dir.z}
+				minetest.set_node(deco, {name=brick})
+				if rot == 0 or rot == 2 then
+					minetest.set_node(vector.add(deco, {x=-1, y=0, z=0}), {name=brick})
+					minetest.set_node(vector.add(deco, {x=1, y=0, z=0}), {name=brick})
+				else
+					minetest.set_node(vector.add(deco, {x=0, y=0, z=-1}), {name=brick})
+					minetest.set_node(vector.add(deco, {x=0, y=0, z=1}), {name=brick})
+				end
 			end
 		end
 	end
@@ -148,22 +173,28 @@ end
 local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 	-- Build pyramid
 	make_pyramid(pos, brick, sandstone, stone, sand)
+
+	local rot = math.random(0, 3)
 	-- Build room
-	local ok, msg, flood_sand = tsm_pyramids.make_room(pos, ptype, room_id)
+	local ok, msg, flood_sand = tsm_pyramids.make_room(pos, ptype, room_id, rot)
 	-- Place mummy spawner
 	local r = math.random(1,3)
-	if r == 1 then
+	-- 4 possible spawner positions
+	local spawner_posses = {
 		-- front
-		add_spawner({x=pos.x+11,y=pos.y+2, z=pos.z+17}, {x=0, y=0, z=-2})
-	elseif r == 2 then
-		-- right
-		add_spawner({x=pos.x+17,y=pos.y+2, z=pos.z+11}, {x=-2, y=0, z=0})
-	else
+		{{x=pos.x+11,y=pos.y+2, z=pos.z+5}, {x=0, y=0, z=2}},
 		-- left
-		add_spawner({x=pos.x+5,y=pos.y+2, z=pos.z+11}, {x=2, y=0, z=0})
-	end
+		{{x=pos.x+17,y=pos.y+2, z=pos.z+11}, {x=-2, y=0, z=0}},
+		-- back
+		{{x=pos.x+11,y=pos.y+2, z=pos.z+17}, {x=0, y=0, z=-2}},
+		-- right
+		{{x=pos.x+5,y=pos.y+2, z=pos.z+11}, {x=2, y=0, z=0}},
+	}
+	-- Delete the spawner position in which the entrance will be placed
+	table.remove(spawner_posses, (rot % 4) + 1)
+	add_spawner(spawner_posses[r][1], spawner_posses[r][2])
 	-- Build entrance
-	make_entrance({x=pos.x,y=pos.y, z=pos.z}, brick, sand, flood_sand)
+	make_entrance(pos, rot, brick, sand, flood_sand)
 	-- Done
 	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
 	return ok, msg

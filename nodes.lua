@@ -34,21 +34,27 @@ for i=1, #img do
 end
 
 local trap_on_timer = function(pos, elapsed)
-	local objs = minetest.get_objects_inside_radius(pos, 2)
 	local n = minetest.get_node(pos)
+	if not (n and n.name) then
+		return true
+	end
+	-- Drop trap stone when player is nearby
+	local objs = minetest.get_objects_inside_radius(pos, 2)
 	for i, obj in pairs(objs) do
 		if obj:is_player() then
-			if n and n.name then
-				if minetest.registered_nodes[n.name]._tsm_pyramids_crack and minetest.registered_nodes[n.name]._tsm_pyramids_crack < 2 then
-					if n.name == "tsm_pyramids:trap" then
-						minetest.set_node(pos, {name="tsm_pyramids:trap_2"})
-						minetest.check_for_falling(pos)
-					elseif n.name == "tsm_pyramids:desert_trap" then
-						minetest.set_node(pos, {name="tsm_pyramids:desert_trap_2"})
-						minetest.check_for_falling(pos)
-					end
+			if minetest.registered_nodes[n.name]._tsm_pyramids_crack and minetest.registered_nodes[n.name]._tsm_pyramids_crack < 2 then
+				-- 70% chance to ignore player to make the time of falling less predictable
+				if math.random(1, 10) >= 3 then
 					return true
 				end
+				if n.name == "tsm_pyramids:trap" then
+					minetest.set_node(pos, {name="tsm_pyramids:trap_2"})
+					minetest.check_for_falling(pos)
+				elseif n.name == "tsm_pyramids:desert_trap" then
+					minetest.set_node(pos, {name="tsm_pyramids:desert_trap_2"})
+					minetest.check_for_falling(pos)
+				end
+				return true
 			end
 		end
 	end

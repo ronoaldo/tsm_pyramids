@@ -752,12 +752,24 @@ function tsm_pyramids.make_traps(pos, stype, rotations)
 	-- * and 2 layers of sandstone/brick at the bottom (to prevent lava escaping)
 	-- The depth of air between trap stones and lava layer is <depth> - 4
 	local depth = 7
+	local wmin, wmax = -1,9
 	for iy=0,depth,1 do
-		for ix=0,8,1 do
-			for iz=0,8,1 do
-				local n_str = layout[tonumber(ix*9+iz+1)]
-				local p2 = 0
-				minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, depth, code_table), param2=p2})
+		for ix=wmin,wmax,1 do
+			for iz=wmin,wmax,1 do
+				local n_str
+				if ix == wmin or ix == wmax or iz == wmin or iz == wmax then
+					-- Walls around room
+					if iy == depth then
+						n_str = code_table["s"]
+					else
+						n_str = code_table["S"]
+					end
+					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=n_str})
+				else
+					-- Walls below room
+					n_str = layout[tonumber(ix*9+iz+1)]
+					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, depth, code_table)})
+				end
 			end
 		end
 	end

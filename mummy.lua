@@ -95,8 +95,8 @@ local MUMMY_DEF = {
 
 local spawner_DEF = {
 	hp_max = 1,
-	physical = true,
-	collisionbox = {0,0,0,0,0,0},
+	physical = false,
+	pointable = false,
 	visual = "mesh",
 	visual_size = {x=3.3,y=3.3},
 	mesh = mummy_mesh,

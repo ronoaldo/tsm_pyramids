@@ -1,5 +1,12 @@
 local S = minetest.get_translator("tsm_pyramids")
 
+-- Pyramid width (must be an odd number)
+local PYRA_W = 23
+-- Pyramid width minus 1
+local PYRA_Wm = PYRA_W - 1
+-- Half of (Pyramid width minus 1)
+local PYRA_Wh = PYRA_Wm / 2
+
 tsm_pyramids = {}
 
 dofile(minetest.get_modpath("tsm_pyramids").."/mummy.lua")
@@ -109,13 +116,13 @@ local function make_entrance(pos, rot, brick, sand, flood_sand)
 	local roffset = roffset_arr[rot + 1]
 	local way
 	if rot == 0 then
-		way = vector.add(pos, {x=11, y=0, z=0})
+		way = vector.add(pos, {x=PYRA_Wh, y=0, z=0})
 	elseif rot == 1 then
-		way = vector.add(pos, {x=22, y=0, z=11})
+		way = vector.add(pos, {x=PYRA_Wm, y=0, z=PYRA_Wh})
 	elseif rot == 2 then
-		way = vector.add(pos, {x=11, y=0, z=22})
+		way = vector.add(pos, {x=PYRA_Wh, y=0, z=PYRA_Wm})
 	else
-		way = vector.add(pos, {x=0, y=0, z=11})
+		way = vector.add(pos, {x=0, y=0, z=PYRA_Wh})
 	end
 	local max_sand_height = math.random(1,3)
 	for ie=0,6,1 do
@@ -149,9 +156,9 @@ local function make_pyramid(pos, brick, sandstone, stone, sand)
 	local set_to_sand = {}
 	local set_to_stone = {}
 	-- Build pyramid
-	for iy=0,math.random(10,11),1 do
-		for ix=iy,22-iy,1 do
-			for iz=iy,22-iy,1 do
+	for iy=0,math.random(10,PYRA_Wh),1 do
+		for ix=iy,PYRA_W-1-iy,1 do
+			for iz=iy,PYRA_W-1-iy,1 do
 				if iy < 1 then
 					make_foundation_part({x=pos.x+ix,y=pos.y,z=pos.z+iz}, set_to_stone)
 				end
@@ -186,13 +193,13 @@ local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 	-- 4 possible spawner positions
 	local spawner_posses = {
 		-- front
-		{{x=pos.x+11,y=pos.y+2, z=pos.z+5}, {x=0, y=0, z=2}},
+		{{x=pos.x+PYRA_Wh,y=pos.y+2, z=pos.z+5}, {x=0, y=0, z=2}},
 		-- left
-		{{x=pos.x+17,y=pos.y+2, z=pos.z+11}, {x=-2, y=0, z=0}},
+		{{x=pos.x+PYRA_Wm-5,y=pos.y+2, z=pos.z+PYRA_Wh}, {x=-2, y=0, z=0}},
 		-- back
-		{{x=pos.x+11,y=pos.y+2, z=pos.z+17}, {x=0, y=0, z=-2}},
+		{{x=pos.x+PYRA_Wh,y=pos.y+2, z=pos.z+PYRA_W-5}, {x=0, y=0, z=-2}},
 		-- right
-		{{x=pos.x+5,y=pos.y+2, z=pos.z+11}, {x=2, y=0, z=0}},
+		{{x=pos.x+5,y=pos.y+2, z=pos.z+PYRA_Wh}, {x=2, y=0, z=0}},
 	}
 	-- Delete the spawner position in which the entrance will be placed
 	table.remove(spawner_posses, (rot % 4) + 1)
@@ -266,9 +273,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		if p2.y < 0 then return end
 
 		local off = 0
-		local opos1 = {x=p2.x+22,y=p2.y-1,z=p2.z+22}
-		local opos2 = {x=p2.x+22,y=p2.y-1,z=p2.z}
-		local opos3 = {x=p2.x,y=p2.y-1,z=p2.z+22}
+		local opos1 = {x=p2.x+PYRA_Wm,y=p2.y-1,z=p2.z+PYRA_Wm}
+		local opos2 = {x=p2.x+PYRA_Wm,y=p2.y-1,z=p2.z}
+		local opos3 = {x=p2.x,y=p2.y-1,z=p2.z+PYRA_Wm}
 		local opos1_n = minetest.get_node_or_nil(opos1)
 		local opos2_n = minetest.get_node_or_nil(opos2)
 		local opos3_n = minetest.get_node_or_nil(opos3)
@@ -339,7 +346,7 @@ minetest.register_chatcommand("spawnpyramid", {
 				room_id = r
 			end
 			local ok, msg
-			pos = vector.add(pos, {x=-11, y=-1, z=0})
+			pos = vector.add(pos, {x=-PYRA_Wh, y=-1, z=0})
 			if s == 1 then
 				-- Sandstone
 				ok, msg = make(pos, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone", room_id)

@@ -318,9 +318,6 @@ if minetest.get_modpath("pyramids") == nil then
 	minetest.register_alias("pyramids:deco_stone2", "tsm_pyramids:deco_stone2")
 	minetest.register_alias("pyramids:deco_stone3", "tsm_pyramids:deco_stone3")
 	minetest.register_alias("pyramids:spawner_mummy", "tsm_pyramids:spawner_mummy")
-
-	-- FIXME: Entities are currently NOT backwards-compatible
-	-- TODO: Update README when full backwards-compability is achieved
 end
 
 minetest.register_chatcommand("spawnpyramid", {

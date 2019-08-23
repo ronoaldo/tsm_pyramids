@@ -570,7 +570,6 @@ code_desert_stone["1"] = "default:desert_stone_block"
 code_desert_stone["2"] = "default:desert_stone_block"
 code_desert_stone["3"] = "default:desert_stone_block"
 code_desert_stone["S"] = "default:desert_stonebrick"
--- TODO: Add desert stone trap?
 code_desert_stone["t"] = "air"
 
 local function replace(str, iy, code_table, deco, column_style)

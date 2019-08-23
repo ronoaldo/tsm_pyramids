@@ -241,6 +241,17 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if not perlin1 then
 		perlin1 = minetest.get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
 	end
+	--[[ Make sure the pyramid doesn't bleed outside of maxp,
+	so it doesn't get placed incompletely by the mapgen.
+	This creates a bias somewhat, as this means there are some coordinates in
+        which pyramids cannot spawn. But it's still better to have broken pyramids.
+	]]
+	local limit = function(pos, maxp)
+		pos.x = math.min(pos.x, maxp.x - PYRA_W+1)
+		pos.y = math.min(pos.y, maxp.y - PYRA_Wh)
+		pos.z = math.min(pos.z, maxp.z - PYRA_W+1)
+		return pos
+	end
 	local noise1 = perlin1:get_2d({x=minp.x,y=minp.y})--,z=minp.z})
 
 	if noise1 > 0.25 or noise1 < -0.26 then
@@ -289,6 +300,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			p2 = ground(opos3, p2)
 		end
 		p2.y = p2.y - 3
+		p2 = limit(p2, maxp)
 		if p2.y < 0 then p2.y = 0 end
 		if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or 
 				minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
@@ -305,13 +317,13 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		end
 		if sand == "default:desert_sand" then
 			-- Desert sandstone pyramid
-			minetest.after(0.8, make, p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone")
+			make(p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone")
 		elseif sand == "default:sand" then
 			-- Sandstone pyramid
-			minetest.after(0.8, make, p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
+			make(p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
 		else
 			-- Desert stone pyramid
-			minetest.after(0.8, make, p2, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "default:desert_sand", "desert_stone")
+			make(p2, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "default:desert_sand", "desert_stone")
 		end
 	end
 end)

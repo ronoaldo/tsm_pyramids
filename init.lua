@@ -239,7 +239,8 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if noise1 > 0.25 or noise1 < -0.26 then
 		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
 
-		local sands = {"default:sand", "default:desert_sand", "default:desert_stone"}
+		-- TODO: Re-activate desert stone pyramid
+		local sands = {"default:sand", "default:desert_sand", --[["default:desert_stone"]]}
 		local p2
 		local psand = {}
 		local sand
@@ -333,7 +334,8 @@ minetest.register_chatcommand("spawnpyramid", {
 			end
 			local pos = player:get_pos()
 			pos = vector.round(pos)
-			local s = math.random(1,3)
+			-- TODO: Enable desert stone pyramid
+			local s = math.random(1,2)
 			local r = tonumber(param)
 			local room_id
 			if r then
@@ -349,6 +351,7 @@ minetest.register_chatcommand("spawnpyramid", {
 				ok, msg = make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone", room_id)
 			else
 				-- Desert stone
+				-- XXX: Currently unused
 				ok, msg = make(pos, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "ignore", "desert_stone", room_id)
 			end
 			if ok then

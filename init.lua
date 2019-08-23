@@ -302,7 +302,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		p2.y = p2.y - 3
 		p2 = limit(p2, maxp)
 		if p2.y < 0 then p2.y = 0 end
-		if minetest.find_node_near(p2, 25, {"default:water_source"}) ~= nil or 
+		if minetest.find_node_near(p2, 5, {"default:water_source"}) ~= nil or
 				minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
 				minetest.find_node_near(p2, 52, {"default:sandstonebrick"}) ~= nil or
 				minetest.find_node_near(p2, 52, {"default:desert_sandstone_brick"}) ~= nil then

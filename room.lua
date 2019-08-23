@@ -714,7 +714,7 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 		end
 	end
 	if room.traps then
-		tsm_pyramids.make_traps(pos, stype, rotations)
+		tsm_pyramids.make_traps(pos, stype, rotations, layout)
 	end
 	if sanded then
 		tsm_pyramids.flood_sand(pos, stype)
@@ -722,10 +722,15 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	return true, nil, sanded
 end
 
-local shuffle_traps = function(chance)
+local shuffle_traps = function(chance, layout_room)
 	layout_traps = table.copy(layout_traps_template)
 	for a=1, #layout_traps do
-		if layout_traps[a] == "?" then
+		-- Delete trap if this space of the room is occupied
+		if layout_room[a] ~= " " then
+			layout_traps[a] = "S"
+		-- Randomly turn tile into a trap, or not
+		elseif layout_traps[a] == "?" then
+			-- percentage for a trap
 			if math.random(1,100) <= chance then
 				layout_traps[a] = "~"
 			else
@@ -735,14 +740,14 @@ local shuffle_traps = function(chance)
 	end
 end
 
-function tsm_pyramids.make_traps(pos, stype, rotations)
+function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 	local code_table = code_sandstone
 	if stype == "desert_sandstone" then
 		code_table = code_desert_sandstone
 	elseif stype == "desert_stone" then
 		code_table = code_desert_stone
 	end
-	shuffle_traps(math.random(10,100))
+	shuffle_traps(math.random(10,100), layout_room)
 	local hole = {x=pos.x+7,y=pos.y, z=pos.z+7}
 	local layout = rotate_layout(layout_traps, ROOM_WIDTH, rotations)
 	-- Depth is total depth of trap area:

@@ -162,14 +162,6 @@ local function make_pyramid(pos, brick, sandstone, stone, sand)
 					make_foundation_part({x=pos.x+ix,y=pos.y,z=pos.z+iz}, set_to_stone)
 				end
 				table.insert(set_to_brick, {x=pos.x+ix,y=pos.y+iy,z=pos.z+iz})
-				if sand ~= "ignore" then
-					for yy=1,10-iy,1 do
-						local n = minetest.get_node({x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
-						if n and n.name and n.name == stone then
-							table.insert(set_to_sand, {x=pos.x+ix,y=pos.y+iy+yy,z=pos.z+iz})
-						end
-					end
-				end
 			end
 		end
 	end

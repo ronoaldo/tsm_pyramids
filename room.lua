@@ -524,9 +524,218 @@ local room_types = {
 		},
 		--traps = true,
 	},
+	-- Ankh statue
+	{
+		style = "stacked",
+		layout = { {
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," ","s",">"," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+		}},
+		stype = "desert_sandstone",
+		wall = {
+			"S","S","S","S","S","S","S","S","S",
+			"s","2","s","2","s","2","s","2","s",
+			"S","S","S","S","S","S","S","S","S",
+			"2","s","2","s","2","s","2","s","2",
+			"S","S","S","S","S","S","S","S","S",
+		},
+	},
+	-- Cactus room
+	{
+		style = "stacked",
+		layout_offset = -1,
+		layout_height = 5,
+		layout = {{
+			"s","s","s","s","s","s","s","s","s",
+			"s","a","a","a","a","a","a","a","s",
+			"s","a","a","a","a","a","a","a","s",
+			"s","a","a","a","a","a","a","a","s",
+			"s","a","a","a","a","a","a","a","s",
+			"s","a","a","a","a","a","a","a","s",
+			"s","a","a","a","a","a","a","a","s",
+			"s","a","a","a","a","a","a","a","s",
+			"s","s","s","s","s","s","s","s","s",
+		},{
+			" "," "," "," "," "," "," "," ","<",
+			" ","c"," ","c"," ","c"," ","c"," ",
+			" "," "," "," "," "," "," "," "," ",
+			" ","c"," ","c"," ","c"," ","c"," ",
+			" "," "," "," "," "," "," "," "," ",
+			" ","c"," ","c"," ","c"," ","c"," ",
+			" "," "," "," "," "," "," "," "," ",
+			" ","c"," ","c"," ","c"," ","c"," ",
+			" "," "," "," "," "," "," "," ","<",
 
-
-
+		}},
+		wall = {
+			"S","S","S","S","S","S","S","S","S",
+			"s","1","s","1","s","1","s","1","s",
+			"S","S","S","S","S","S","S","S","S",
+			"1","s","1","s","1","s","1","s","1",
+			"S","S","S","S","S","S","S","S","S",
+		},
+		stype = "desert_sandstone",
+	},
+	-- Sun room
+	{
+		style = "stacked",
+		layout_offset = 0,
+		layout_height = 8,
+		layout = {{
+			"S","s","s","s","s","s","s","s","S",
+			"s","S","s","s","s","s","s","S","s",
+			"s","s","S","S","S","S","S","s","s",
+			"s","s","S","s","s","s","S","s","s",
+			"s","s","S","s","s","s","S","s","s",
+			"s","s","S","s","s","s","S","s","s",
+			"s","s","S","S","S","S","S","s","s",
+			"s","S","s","s","s","s","s","S","s",
+			"S","s","s","s","s","s","s","s","S",
+		},{
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," ","<"," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			"S","s","s","s","s","s","s","s","S",
+			"s","S","s","s","s","s","s","S","s",
+			"s","s","S","S","S","S","S","s","s",
+			"s","s","S","s","s","s","S","s","s",
+			"s","s","S","s","s","s","S","s","s",
+			"s","s","S","s","s","s","S","s","s",
+			"s","s","S","S","S","S","S","s","s",
+			"s","S","s","s","s","s","s","S","s",
+			"S","s","s","s","s","s","s","s","S",
+		}},
+		wall = {
+			"S","S","S","S","S","S","S","S","S",
+			"s","1","s","1","s","1","s","1","s",
+			"S","S","S","S","S","S","S","S","S",
+			"1","s","1","s","1","s","1","s","1",
+			"S","S","S","S","S","S","S","S","S",
+		},
+		stype = "sandstone",
+		open_roof = true,
+	},
+	-- Attic
+	{
+		style = "stacked",
+		layout_height = 6,
+		layout_offset = 1,
+		layout = { {
+			" "," "," "," "," "," "," "," "," ",
+			" ","S","S","S"," ","S","S","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" "," "," "," ","s",">"," "," "," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S","S","S"," ","S","S","S"," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			" "," "," "," "," "," "," "," "," ",
+			" ","S","S","S"," ","S","S","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S","S","S"," ","S","S","S"," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			" "," "," "," "," "," "," "," "," ",
+			" ","S","S","S"," ","S","S","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" "," "," "," ","s"," "," "," "," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S"," "," "," "," "," ","S"," ",
+			" ","S","S","S"," ","S","S","S"," ",
+			" "," "," "," "," "," "," "," "," ",
+		},{
+			"s","s","s","s","s","s","s","s","s",
+			"s","S","S","S","S","S","S","S","s",
+			"s","S","s","s","s","s","s","S","s",
+			"s","S","s","s","s","s","s","S","s",
+			"s","S","s","s","s","s","s","S","s",
+			"s","S","s","s","s","s","s","S","s",
+			"s","S","s","s","s","s","s","S","s",
+			"s","S","S","S","S","S","S","S","s",
+			"s","s","s","s","s","s","s","s","s",
+		},{
+			"S","S","S","S","S","S","S","S","S",
+			"S","S","S","S","v","S","S","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S",">"," "," "," "," "," ","<","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S","S","S","^","S","S","S","S",
+			"S","S","S","S","S","S","S","S","S",
+		},{
+			"S","S","S","S","S","S","S","S","S",
+			"S","S","S","S","S","S","S","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S"," "," "," "," "," ","S","S",
+			"S","S","S","S","S","S","S","S","S",
+			"S","S","S","S","S","S","S","S","S",
+		}},
+	},
 }
 
 local layout_traps
@@ -555,6 +764,8 @@ local code_sandstone = {
 	["v"] = "default:chest",
 	["~"] = "default:lava_source",
 	["t"] = "tsm_pyramids:trap",
+	["c"] = "default:large_cactus_seedling",
+	["a"] = "default:sand",
 }
 local code_desert_sandstone = table.copy(code_sandstone)
 code_desert_sandstone["s"] = "default:desert_sandstone"
@@ -563,6 +774,7 @@ code_desert_sandstone["2"] = "tsm_pyramids:deco_stone5"
 code_desert_sandstone["3"] = "tsm_pyramids:deco_stone6"
 code_desert_sandstone["S"] = "default:desert_sandstone_brick"
 code_desert_sandstone["t"] = "tsm_pyramids:desert_trap"
+code_desert_sandstone["a"] = "default:desert_sand"
 
 local code_desert_stone = table.copy(code_sandstone)
 code_desert_stone["s"] = "default:desert_stone_block"
@@ -571,6 +783,7 @@ code_desert_stone["2"] = "default:desert_stone_block"
 code_desert_stone["3"] = "default:desert_stone_block"
 code_desert_stone["S"] = "default:desert_stonebrick"
 code_desert_stone["t"] = "air"
+code_desert_stone["a"] = "default:desert_sand"
 
 local function replace(str, iy, code_table, deco, column_style)
 	if iy < 4 and (str == "<" or str == ">" or str == "^" or str == "v") then str = " " end
@@ -669,13 +882,13 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	local room = table.copy(room_types[room_id])
 	local chests = {}
 	local column_style
-	local layout = rotate_layout(room.layout, ROOM_WIDTH, rotations)
 	if stype == "desert_stone" then
 		column_style = 0
 	else
 		column_style = math.random(0,4)
 	end
 	if room.style == "yrepeat" then
+		local layout = rotate_layout(room.layout, ROOM_WIDTH, rotations)
 		for iy=0,4,1 do
 			for ix=0,8,1 do
 				for iz=0,8,1 do
@@ -692,6 +905,51 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 					end
 					local cpos = {x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}
 					local nn = replace(n_str, iy, code_table, deco, column_style)
+					minetest.set_node(cpos, {name=nn, param2=p2})
+					if nn == "default:chest" then
+						table.insert(chests, cpos)
+					end
+				end
+			end
+		end
+	elseif room.style == "stacked" then
+		-- TODO: Implement wall designs
+		-- TODO: Fix room height settings
+		local layout_list = room.layout
+		local layout
+		local layout_offset = room.layout_offset
+		local layout_height = room.layout_height
+		if not layout_offset then
+			layout_offset = 0
+		end
+		if not layout_height then
+			layout_height = 5
+		end
+		for iy=0,layout_height-1,1 do
+			layout = nil
+			if layout_list[layout_height-iy] then
+				layout = rotate_layout(layout_list[layout_height-iy], ROOM_WIDTH, rotations)
+			end
+			for ix=0,8,1 do
+				for iz=0,8,1 do
+					local n_str
+					if layout then
+						n_str = layout[tonumber(ix*9+iz+1)]
+					else
+						n_str = " "
+					end
+					local p2 = 0
+					if n_str == "<" then
+						p2 = 0
+					elseif n_str == ">" then
+						p2 = 2
+					elseif n_str == "^" then
+						p2 = 1
+					elseif n_str == "v" then
+						p2 = 3
+					end
+					local cpos = {x=hole.x+ix,y=hole.y-iy+layout_offset,z=hole.z+iz}
+					local nn = code_table[n_str]
 					minetest.set_node(cpos, {name=nn, param2=p2})
 					if nn == "default:chest" then
 						table.insert(chests, cpos)

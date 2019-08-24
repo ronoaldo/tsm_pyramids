@@ -54,7 +54,7 @@ local function hit(self)
 	self.object:set_properties(prop)
 	minetest.after(0.4, function(self)
 		local prop = {textures = mummy_texture,}
-		if self.object ~= nil then
+		if self ~= nil and self.object ~= nil then
 			self.object:set_properties(prop)
 		end
 	end, self)

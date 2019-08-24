@@ -254,28 +254,37 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if noise1 > 0.25 or noise1 < -0.26 then
 		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
 
-		-- TODO: Re-activate desert stone pyramid
-		local sands = {"default:sand", "default:desert_sand", --[["default:desert_stone"]]}
+		local sands = {"default:sand", "default:desert_sand", "default:desert_stone"}
 		local p2
 		local psand = {}
 		local sand
 		local cnt = 0
-		local cnt_min = 100
+		local sand_cnt_max = 0
+		local sand_cnt_max_id
 		for s=1, #sands do
 			cnt = 0
+			local sand_cnt = 0
 			sand = sands[s]
 			psand[s] = minetest.find_node_near(mpos, 25, sand)
-			while psand == nil and cnt < 5 do
+			while cnt < 5 do
 				cnt = cnt+1
 				mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
-				psand[s] = minetest.find_node_near(mpos, 25, sand)
-			end
-			if psand[s] ~= nil then
-				if cnt < cnt_min then
-					cnt_min = cnt
+				local spos = minetest.find_node_near(mpos, 25, sand)
+				if spos ~= nil then
+					sand_cnt = sand_cnt + 1
+					if psand[s] == nil then
+						psand[s] = spos
+					end
+				end
+				if sand_cnt > sand_cnt_max then
+					sand_cnt_max = sand_cnt
+					sand_cnt_max_id = s
 					p2 = psand[s]
 				end
 			end
+		end
+		if sand_cnt_max_id then
+			sand = sands[sand_cnt_max_id]
 		end
 		if p2 == nil then return end
 		if p2.y < 0 then return end
@@ -347,8 +356,7 @@ minetest.register_chatcommand("spawnpyramid", {
 			end
 			local pos = player:get_pos()
 			pos = vector.round(pos)
-			-- TODO: Enable desert stone pyramid
-			local s = math.random(1,2)
+			local s = math.random(1,3)
 			local r = tonumber(param)
 			local room_id
 			if r then
@@ -364,7 +372,6 @@ minetest.register_chatcommand("spawnpyramid", {
 				ok, msg = make(pos, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone", room_id)
 			else
 				-- Desert stone
-				-- XXX: Currently unused
 				ok, msg = make(pos, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "ignore", "desert_stone", room_id)
 			end
 			if ok then

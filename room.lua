@@ -629,15 +629,15 @@ local room_types = {
 		layout_offset = 0,
 		layout_height = 8,
 		layout = {{
-			"S","s","s","s","s","s","s","s","S",
-			"s","S","s","s","s","s","s","S","s",
-			"s","s","S","S","S","S","S","s","s",
-			"s","s","S","s","s","s","S","s","s",
-			"s","s","S","s","s","s","S","s","s",
-			"s","s","S","s","s","s","S","s","s",
-			"s","s","S","S","S","S","S","s","s",
-			"s","S","s","s","s","s","s","S","s",
-			"S","s","s","s","s","s","s","s","S",
+			"n","s","s","s","s","s","s","s","n",
+			"s","n","s","s","s","s","s","n","s",
+			"s","s","n","n","n","n","n","s","s",
+			"s","s","n","s","s","s","n","s","s",
+			"s","s","n","s","s","s","n","s","s",
+			"s","s","n","s","s","s","n","s","s",
+			"s","s","n","n","n","n","n","s","s",
+			"s","n","s","s","s","s","s","n","s",
+			"n","s","s","s","s","s","s","s","n",
 		},{
 			" "," "," "," "," "," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
@@ -649,15 +649,15 @@ local room_types = {
 			" "," "," "," "," "," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},{
-			"S","s","s","s","s","s","s","s","S",
-			"s","S","s","s","s","s","s","S","s",
-			"s","s","S","S","S","S","S","s","s",
-			"s","s","S","s","s","s","S","s","s",
-			"s","s","S","s","s","s","S","s","s",
-			"s","s","S","s","s","s","S","s","s",
-			"s","s","S","S","S","S","S","s","s",
-			"s","S","s","s","s","s","s","S","s",
-			"S","s","s","s","s","s","s","s","S",
+			"n","s","s","s","s","s","s","s","n",
+			"s","n","s","s","s","s","s","n","s",
+			"s","s","n","n","n","n","n","s","s",
+			"s","s","n","s","s","s","n","s","s",
+			"s","s","n","s","s","s","n","s","s",
+			"s","s","n","s","s","s","n","s","s",
+			"s","s","n","n","n","n","n","s","s",
+			"s","n","s","s","s","s","s","n","s",
+			"n","s","s","s","s","s","s","s","n",
 		}},
 		wall = {
 			"S","S","S","S","S","S","S","S","S",
@@ -755,6 +755,7 @@ local code_sandstone = {
 	[" "] = "air",
 	["c"] = "default:sandstone",
 	["s"] = "default:sandstone",
+	["n"] = "default:desert_sandstone",
 	["h"] = "default:sandstone",
 	["S"] = "default:sandstonebrick",
 	["1"] = "tsm_pyramids:deco_stone1",
@@ -772,6 +773,7 @@ local code_sandstone = {
 local code_desert_sandstone = table.copy(code_sandstone)
 code_desert_sandstone["c"] = "default:desert_sandstone"
 code_desert_sandstone["s"] = "default:desert_sandstone"
+code_desert_sandstone["n"] = "default:sandstone"
 code_desert_sandstone["h"] = "default:desert_sandstone"
 code_desert_sandstone["1"] = "tsm_pyramids:deco_stone4"
 code_desert_sandstone["2"] = "tsm_pyramids:deco_stone5"
@@ -783,6 +785,7 @@ code_desert_sandstone["a"] = "default:desert_sand"
 local code_desert_stone = table.copy(code_sandstone)
 code_desert_stone["c"] = "default:desert_stone_block"
 code_desert_stone["s"] = "default:desert_stone_block"
+code_desert_stone["n"] = "default:desert_stone_block"
 code_desert_stone["h"] = "default:desert_stone_block"
 code_desert_stone["1"] = "default:desert_stone_block"
 code_desert_stone["2"] = "default:desert_stone_block"

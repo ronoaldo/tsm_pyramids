@@ -327,6 +327,13 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		if (mg_name == "v6" and sand == "default:desert_sand" and math.random(1, 2) == 1) then
 			sand = "default:sand"
 		end
+		-- Desert stone pyramids only generate in areas with almost no sand
+		if sand == "default:desert_stone" then
+			local nodes = minetest.find_nodes_in_area(vector.add(p2, {x=-1, y=-2, z=-1}), vector.add(p2, {x=PYRA_W+1, y=PYRA_Wh, z=PYRA_W+1}), {"group:sand"})
+			if #nodes > 5 then
+				sand = "default:desert_sand"
+			end
+		end
 		if sand == "default:desert_sand" then
 			-- Desert sandstone pyramid
 			make(p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone")

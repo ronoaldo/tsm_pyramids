@@ -581,13 +581,14 @@ local room_types = {
 		stype = "desert_sandstone",
 		wall = {
 			"S","S","S","S","S","S","S","S","S",
-			"s","2","s","2","s","2","s","2","s",
+			"s","1","s","1","s","1","s","1","s",
 			"S","S","S","S","S","S","S","S","S",
-			"2","s","2","s","2","s","2","s","2",
+			"1","s","1","s","1","s","1","s","1",
 			"S","S","S","S","S","S","S","S","S",
 		},
 	},
-	-- Cactus room
+--[[
+	-- Cactus room 1
 	{
 		style = "stacked",
 		layout_offset = -1,
@@ -616,9 +617,46 @@ local room_types = {
 		}},
 		wall = {
 			"S","S","S","S","S","S","S","S","S",
-			"s","1","s","1","s","1","s","1","s",
 			"S","S","S","S","S","S","S","S","S",
-			"s","1","s","1","s","1","s","1","s",
+			"s","3","s","3","s","3","s","3","s",
+			"S","S","S","S","S","S","S","S","S",
+			"S","S","S","S","S","S","S","S","S",
+		},
+		stype = "desert_sandstone",
+	},
+]]
+	-- Cactus room 2
+	{
+		style = "stacked",
+		layout_offset = -1,
+		layout_height = 5,
+		layout = {{
+			"S","S","S","S","S","S","S","S","S",
+			"S","s","s","s","s","s","s","s","S",
+			"S","s","a","a","a","a","a","s","S",
+			"S","s","a","a","a","a","a","s","S",
+			"S","s","a","a","a","a","a","s","S",
+			"S","s","a","a","a","a","a","s","S",
+			"S","s","a","a","a","a","a","s","S",
+			"S","s","s","s","s","s","s","s","S",
+			"S","S","S","S","S","S","S","S","S",
+		},{
+			" "," "," "," "," "," "," "," ","<",
+			" "," "," "," "," "," "," "," "," ",
+			" "," ","C"," ","C"," ","C"," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," ","C"," ","C"," ","C"," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," ","C"," ","C"," ","C"," "," ",
+			" "," "," "," "," "," "," "," "," ",
+			" "," "," "," "," "," "," "," ","<",
+
+		}},
+		wall = {
+			"S","S","S","S","S","S","S","S","S",
+			"S","S","S","S","S","S","S","S","S",
+			"s","3","s","3","s","3","s","3","s",
+			"S","S","S","S","S","S","S","S","S",
 			"S","S","S","S","S","S","S","S","S",
 		},
 		stype = "desert_sandstone",
@@ -661,9 +699,9 @@ local room_types = {
 		}},
 		wall = {
 			"S","S","S","S","S","S","S","S","S",
-			"s","1","s","1","s","1","s","1","s",
+			"s","3","s","3","s","3","s","3","s",
 			"S","S","S","S","S","S","S","S","S",
-			"1","s","1","s","1","s","1","s","1",
+			"3","s","3","s","3","s","3","s","3",
 			"S","S","S","S","S","S","S","S","S",
 		},
 		stype = "sandstone",
@@ -899,7 +937,6 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	local tries = 0
 	while tries < #room_types do
 		if room.stype and room.stype ~= stype then
-			minetest.log("error", "stype does not fit: room_id="..room_id.."! trying new room id...")
 			room_id = room_id + 1
 			if room_id > #room_types then
 				room_id = 1
@@ -917,13 +954,27 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	else
 		column_style = math.random(0,4)
 	end
+	-- Custom room walls
+	if room.wall then
+		for iy=0,4,1 do
+			for ie=0,8,1 do
+				local nn = code_table[room.wall[iy*9+ie+1]]
+				minetest.set_node({x=hole.x+ie, y=hole.y-iy, z=hole.z-1}, {name=nn})
+				minetest.set_node({x=hole.x-1, y=hole.y-iy, z=hole.z+ie}, {name=nn})
+
+				minetest.set_node({x=hole.x+ie, y=hole.y-iy, z=hole.z+9}, {name=nn})
+				minetest.set_node({x=hole.x+9, y=hole.y-iy, z=hole.z+ie}, {name=nn})
+			end
+		end
+	end
 	local layout
+	-- Place the room nodes
 	if room.style == "yrepeat" then
 		layout = rotate_layout(room.layout, ROOM_WIDTH, rotations)
 		for iy=0,4,1 do
 			for ix=0,8,1 do
 				for iz=0,8,1 do
-					local n_str = layout[tonumber(ix*9+iz+1)]
+					local n_str = layout[ix*9+iz+1]
 					local p2 = 0
 					if n_str == "<" then
 						p2 = 0
@@ -944,7 +995,6 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 			end
 		end
 	elseif room.style == "stacked" then
-		-- TODO: Implement wall designs
 		local layout_list = room.layout
 		local layout
 		local layout_offset = room.layout_offset
@@ -964,7 +1014,7 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 				for iz=0,8,1 do
 					local n_str
 					if layout then
-						n_str = layout[tonumber(ix*9+iz+1)]
+						n_str = layout[ix*9+iz+1]
 					else
 						n_str = " "
 					end
@@ -1060,7 +1110,7 @@ function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=n_str})
 				else
 					-- Walls below room
-					n_str = layout[tonumber(ix*9+iz+1)]
+					n_str = layout[ix*9+iz+1]
 					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, depth, code_table)})
 				end
 			end

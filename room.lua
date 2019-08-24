@@ -25,15 +25,15 @@ local room_types = {
 	{
 		style = "yrepeat",
 		layout = {
-			"s","s","s","s","s","s","s","s","s",
-			"s"," "," "," "," "," "," "," ","s",
-			"s"," "," "," "," "," "," "," ","s",
-			"s"," "," "," "," "," "," "," ","s",
-			" "," "," "," ","<"," "," "," ","s",
-			"s"," "," "," "," "," "," "," ","s",
-			"s"," "," "," "," "," "," "," ","s",
-			"s"," "," "," "," "," "," "," ","s",
-			"s","s","s","s","s","s","s","s","s"
+			"s","h","h","h","h","h","h","h","s",
+			"h"," "," "," "," "," "," "," ","h",
+			"h"," "," "," "," "," "," "," ","h",
+			"h"," "," "," "," "," "," "," ","h",
+			" "," "," "," ","<"," "," "," ","h",
+			"h"," "," "," "," "," "," "," ","h",
+			"h"," "," "," "," "," "," "," ","h",
+			"h"," "," "," "," "," "," "," ","h",
+			"s","h","h","h","h","h","h","h","s"
 		},
 	},
 	-- 4 large pillars
@@ -754,6 +754,7 @@ local layout_traps_template = {
 local code_sandstone = {
 	[" "] = "air",
 	["s"] = "default:sandstone",
+	["h"] = "default:sandstone",
 	["S"] = "default:sandstonebrick",
 	["1"] = "tsm_pyramids:deco_stone1",
 	["2"] = "tsm_pyramids:deco_stone2",
@@ -769,6 +770,7 @@ local code_sandstone = {
 }
 local code_desert_sandstone = table.copy(code_sandstone)
 code_desert_sandstone["s"] = "default:desert_sandstone"
+code_desert_sandstone["h"] = "default:desert_sandstone"
 code_desert_sandstone["1"] = "tsm_pyramids:deco_stone4"
 code_desert_sandstone["2"] = "tsm_pyramids:deco_stone5"
 code_desert_sandstone["3"] = "tsm_pyramids:deco_stone6"
@@ -778,6 +780,7 @@ code_desert_sandstone["a"] = "default:desert_sand"
 
 local code_desert_stone = table.copy(code_sandstone)
 code_desert_stone["s"] = "default:desert_stone_block"
+code_desert_stone["h"] = "default:desert_stone_block"
 code_desert_stone["1"] = "default:desert_stone_block"
 code_desert_stone["2"] = "default:desert_stone_block"
 code_desert_stone["3"] = "default:desert_stone_block"
@@ -787,7 +790,14 @@ code_desert_stone["a"] = "default:desert_sand"
 
 local function replace(str, iy, code_table, deco, column_style)
 	if iy < 4 and (str == "<" or str == ">" or str == "^" or str == "v") then str = " " end
-	if column_style == 1 or column_style == 2 then
+	if str == "h" then
+		local r = math.random(0,3)
+		if r > 0 then
+			str = deco[r]
+		else
+			str = "s"
+		end
+	elseif column_style == 1 or column_style == 2 then
 		if iy == 0 and str == "s" then str = deco[1] end
 		if iy == 3 and str == "s" then str = deco[2] end
 	elseif column_style == 3 then
@@ -866,7 +876,7 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	-- Select random deco block
 	local deco_ids = {"1", "2", "3"}
 	local deco = {}
-	for i=1, 2 do
+	for i=1, 3 do
 		local r = math.random(1, #deco_ids)
 		table.insert(deco, deco_ids[r])
 		table.remove(deco_ids, r)

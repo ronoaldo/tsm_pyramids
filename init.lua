@@ -135,7 +135,7 @@ local function make_entrance(pos, rot, brick, sand, flood_sand)
 				minetest.remove_node(way_dir)
 			end
 			-- build decoration above entrance
-			if ie >=3 and iy == 3 then
+			if ie == 3 and iy == 3 then
 				local deco = {x=way_dir.x, y=way_dir.y+1,z=way_dir.z}
 				minetest.set_node(deco, {name=brick})
 				if rot == 0 or rot == 2 then

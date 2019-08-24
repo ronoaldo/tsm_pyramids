@@ -896,6 +896,20 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 		return false, S("Incorrect room type ID: @1", room_id)
 	end
 	local room = table.copy(room_types[room_id])
+	local tries = 0
+	while tries < #room_types do
+		if room.stype and room.stype ~= stype then
+			minetest.log("error", "stype does not fit: room_id="..room_id.."! trying new room id...")
+			room_id = room_id + 1
+			if room_id > #room_types then
+				room_id = 1
+			end
+			room = table.copy(room_types[room_id])
+		else
+			break
+		end
+		tries = tries + 1
+	end
 	local chests = {}
 	local column_style
 	if stype == "desert_stone" then
@@ -931,7 +945,6 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 		end
 	elseif room.style == "stacked" then
 		-- TODO: Implement wall designs
-		-- TODO: Fix room height settings
 		local layout_list = room.layout
 		local layout
 		local layout_offset = room.layout_offset

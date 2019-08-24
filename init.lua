@@ -207,7 +207,7 @@ local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
 	-- Build entrance
 	make_entrance(bpos, rot, brick, sand, flood_sand)
 	-- Done
-	minetest.log("action", "Created pyramid at "..minetest.pos_to_string(bpos)..".")
+	minetest.log("action", "[tsm_pyramids] Created pyramid at "..minetest.pos_to_string(bpos)..".")
 	return ok, msg
 end
 
@@ -261,7 +261,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	if noise1 > 0.25 or noise1 < -0.26 then
 		-- Need a bit of luck to place a pyramid
 		if math.random(0,10) > 7 then
-			minetest.log("verbose", "[tsm_pyramids]", "Pyramid not placed, bad dice roll. minp="..minetest.pos_to_string(minp))
+			minetest.log("verbose", "[tsm_pyramids] Pyramid not placed, bad dice roll. minp="..minetest.pos_to_string(minp))
 			return
 		end
 
@@ -298,7 +298,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			end
 		end
 		if p2 == nil then
-			minetest.log("verbose", "[tsm_pyramids]", "Pyramid not placed, no suitable surface. minp="..minetest.pos_to_string(minp))
+			minetest.log("verbose", "[tsm_pyramids] Pyramid not placed, no suitable surface. minp="..minetest.pos_to_string(minp))
 			return
 		end
 		-- Select the material type by the most prominent node type
@@ -307,16 +307,16 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			sand = sands[sand_cnt_max_id]
 		end
 		if p2.y < PYRA_MIN_Y then
-			minetest.log("info", "[tsm_pyramids]", "Pyramid not placed, too deep. p2="..minetest.pos_to_string(p2))
+			minetest.log("info", "[tsm_pyramids] Pyramid not placed, too deep. p2="..minetest.pos_to_string(p2))
 			return
 		end
 		-- Now sink the pyramid until each corner of it is no longer floating in mid-air
 		p2 = limit(p2, maxp)
 		local oposses = {
 			{x=p2.x,y=p2.y-1,z=p2.z},
-			{x=p2.x+PYRA_W,y=p2.y-1,z=p2.z+PYRA_W},
-			{x=p2.x+PYRA_W,y=p2.y-1,z=p2.z},
-			{x=p2.x,y=p2.y-1,z=p2.z+PYRA_W},
+			{x=p2.x+PYRA_Wm,y=p2.y-1,z=p2.z+PYRA_Wm},
+			{x=p2.x+PYRA_Wm,y=p2.y-1,z=p2.z},
+			{x=p2.x,y=p2.y-1,z=p2.z+PYRA_Wm},
 		}
 		for o=1, #oposses do
 			local opos = oposses[o]
@@ -331,7 +331,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 		-- Bad luck, we have hit the chunk border!
 		if p2.y < minp.y then
-			minetest.log("info", "[tsm_pyramids]", "Pyramid not placed, sunken too much. p2="..minetest.pos_to_string(p2))
+			minetest.log("info", "[tsm_pyramids] Pyramid not placed, sunken too much. p2="..minetest.pos_to_string(p2))
 			return
 		end
 
@@ -344,7 +344,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 				minetest.find_node_near(middle, PYRA_W, {"default:dirt_with_grass"}) ~= nil or
 				minetest.find_node_near(middle, 52, {"default:sandstonebrick", "default:desert_sandstone_brick", "default:desert_stonebrick"}) ~= nil then
-			minetest.log("info", "[tsm_pyramids]", "Pyramid not placed, inappropriate node nearby. p2="..minetest.pos_to_string(p2))
+			minetest.log("info", "[tsm_pyramids] Pyramid not placed, inappropriate node nearby. p2="..minetest.pos_to_string(p2))
 			return
 		end
 

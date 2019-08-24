@@ -329,7 +329,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			make(p2, "default:sandstonebrick", "default:sandstone", "default:sandstone", "default:sand", "sandstone")
 		else
 			-- Desert stone pyramid
-			make(p2, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "default:desert_sand", "desert_stone")
+			make(p2, "default:desert_stonebrick", "default:desert_stone_block", "default:desert_stone", "ignore", "desert_stone")
 		end
 	end
 end)

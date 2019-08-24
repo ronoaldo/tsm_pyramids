@@ -402,12 +402,42 @@ if not minetest.settings:get_bool("only_peaceful_mobs") then
 			end
 			if player_near then
 				if mobs < spawner_max_mobs then
-					pos.x = pos.x+1
-					local p = minetest.find_node_near(pos, 5, {"air"})
-					local p2 = {x=pos.x, y=pos.y+1, z=pos.z}
-					local n2 = minetest.get_node(p2)
-					if n2.name == "air" then
-						tsm_pyramids.spawn_mummy(p, 1)
+					local offset = {x=5,y=2,z=5}
+					local nposses = minetest.find_nodes_in_area(vector.subtract(pos, offset), vector.add(pos,offset), "air")
+					local tries = math.max(6, #nposses)
+					for i=1, tries do
+						local r = math.random(1, #nposses)
+						local npos = nposses[r]
+						-- Check if mummy has 2 nodes of free space
+						local two_space = false
+						-- Check if mummy has something to walk on
+						local footing = false
+						-- Find the lowest node
+						for y=-1, -5, -1 do
+							npos.y = npos.y - 1
+							local below = minetest.get_node(npos)
+							if below.name ~= "air" then
+								if y < -1 then
+									two_space = true
+								end
+								npos.y = npos.y + 1
+								footing = true
+								break
+							end
+						end
+						local light = minetest.get_node_light(npos, 0.5)
+						if not two_space then
+							local above = minetest.get_node({x=npos.x, y=npos.y+1, z=npos.z})
+							if above.name == "air" then
+								two_space = true
+							end
+						end
+						if footing and two_space and light < 15 then
+							tsm_pyramids.spawn_mummy(npos, 1)
+							break
+						else
+							table.remove(nposses, r)
+						end
 					end
 				end
 			end

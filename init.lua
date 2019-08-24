@@ -152,7 +152,6 @@ end
 
 local function make_pyramid(pos, brick, sandstone, stone, sand)
 	local set_to_brick = {}
-	local set_to_sand = {}
 	local set_to_stone = {}
 	-- Build pyramid
 	for iy=0,math.random(10,PYRA_Wh),1 do
@@ -167,9 +166,6 @@ local function make_pyramid(pos, brick, sandstone, stone, sand)
 	end
 	minetest.bulk_set_node(set_to_stone , {name=stone})
 	minetest.bulk_set_node(set_to_brick, {name=brick})
-	if sand ~= "ignore" then
-		minetest.bulk_set_node(set_to_sand, {name=sand})
-	end
 end
 
 local function make(pos, brick, sandstone, stone, sand, ptype, room_id)

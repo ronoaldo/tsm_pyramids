@@ -77,7 +77,11 @@ end
 
 local function add_spawner(pos, mummy_offset)
 	minetest.set_node(pos, {name="tsm_pyramids:spawner_mummy"})
-	if not minetest.settings:get_bool("only_peaceful_mobs") then tsm_pyramids.spawn_mummy(vector.add(pos, mummy_offset),2) end
+	if not minetest.settings:get_bool("only_peaceful_mobs") then
+		for i=1,2 do
+			tsm_pyramids.attempt_mummy_spawn(pos, false)
+		end
+	end
 end
 
 local function can_replace(pos)

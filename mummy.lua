@@ -16,7 +16,7 @@ local sound_normal = "mummy"
 local sound_hit = "mummy_hurt"
 local sound_dead = "mummy_death"
 
-local spawner_range = 17
+local spawner_check_range = 17
 local spawner_max_mobs = 6
 
 local function get_animations()
@@ -342,7 +342,8 @@ minetest.register_craftitem("tsm_pyramids:spawn_egg", {
 
 })
 
-function tsm_pyramids.spawn_mummy (pos, number)
+-- Spawn a mummy at position
+function tsm_pyramids.spawn_mummy_at(pos, number)
 	local node = minetest.get_node(pos)
 	if node.name ~= "air" then
 		return
@@ -383,65 +384,77 @@ minetest.register_node("tsm_pyramids:spawner_mummy", {
 	end,
 	sounds = spawnersounds,
 })
+
+-- Attempt to spawn a mummy at a random appropriate position around pos.
+-- Criteria:
+-- * Must be close to pos
+-- * Not in sunlight
+-- * Must be air on top of a non-air block
+-- * No more than 6 mummies in area
+-- * Player must be near is player_near_required is true
+function tsm_pyramids.attempt_mummy_spawn(pos, player_near_required)
+	local player_near = false
+	local mobs = 0
+	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, spawner_check_range)) do
+		if obj:is_player() then
+			player_near = true
+		else
+			if obj:get_luaentity() and obj:get_luaentity().name == "tsm_pyramids:mummy" then
+				mobs = mobs + 1
+			end
+		end
+	end
+	if player_near or (not player_near_required) then
+		if mobs < spawner_max_mobs then
+			local offset = {x=5,y=2,z=5}
+			local nposses = minetest.find_nodes_in_area(vector.subtract(pos, offset), vector.add(pos,offset), "air")
+			local tries = math.min(6, #nposses)
+			for i=1, tries do
+				local r = math.random(1, #nposses)
+				local npos = nposses[r]
+				-- Check if mummy has 2 nodes of free space
+				local two_space = false
+				-- Check if mummy has something to walk on
+				local footing = false
+				-- Find the lowest node
+				for y=-1, -5, -1 do
+					npos.y = npos.y - 1
+					local below = minetest.get_node(npos)
+					if below.name ~= "air" then
+						if y < -1 then
+							two_space = true
+						end
+						npos.y = npos.y + 1
+						footing = true
+						break
+					end
+				end
+				local light = minetest.get_node_light(npos, 0.5)
+				if not two_space then
+					local above = minetest.get_node({x=npos.x, y=npos.y+1, z=npos.z})
+					if above.name == "air" then
+						two_space = true
+					end
+				end
+				if footing and two_space and light < 15 then
+					tsm_pyramids.spawn_mummy_at(npos, 1)
+					break
+				else
+					table.remove(nposses, r)
+				end
+			end
+		end
+	end
+end
+
 if not minetest.settings:get_bool("only_peaceful_mobs") then
 	minetest.register_abm({
 		nodenames = {"tsm_pyramids:spawner_mummy"},
 		interval = 2.0,
 		chance = 20,
 		action = function(pos, node, active_object_count, active_object_count_wider)
-			local player_near = false
-			local mobs = 0
-			for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, spawner_range)) do
-				if obj:is_player() then
-					player_near = true
-				else
-					if obj:get_luaentity() and obj:get_luaentity().name == "tsm_pyramids:mummy" then
-						mobs = mobs + 1
-					end
-				end
-			end
-			if player_near then
-				if mobs < spawner_max_mobs then
-					local offset = {x=5,y=2,z=5}
-					local nposses = minetest.find_nodes_in_area(vector.subtract(pos, offset), vector.add(pos,offset), "air")
-					local tries = math.max(6, #nposses)
-					for i=1, tries do
-						local r = math.random(1, #nposses)
-						local npos = nposses[r]
-						-- Check if mummy has 2 nodes of free space
-						local two_space = false
-						-- Check if mummy has something to walk on
-						local footing = false
-						-- Find the lowest node
-						for y=-1, -5, -1 do
-							npos.y = npos.y - 1
-							local below = minetest.get_node(npos)
-							if below.name ~= "air" then
-								if y < -1 then
-									two_space = true
-								end
-								npos.y = npos.y + 1
-								footing = true
-								break
-							end
-						end
-						local light = minetest.get_node_light(npos, 0.5)
-						if not two_space then
-							local above = minetest.get_node({x=npos.x, y=npos.y+1, z=npos.z})
-							if above.name == "air" then
-								two_space = true
-							end
-						end
-						if footing and two_space and light < 15 then
-							tsm_pyramids.spawn_mummy(npos, 1)
-							break
-						else
-							table.remove(nposses, r)
-						end
-					end
-				end
-			end
-		end
+			tsm_pyramids.attempt_mummy_spawn(pos, true)
+		end,
 	})
 end
 

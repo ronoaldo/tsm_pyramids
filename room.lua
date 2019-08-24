@@ -50,6 +50,7 @@ local room_types = {
 			" ","c","c"," "," "," ","c","c"," ",
 			" "," "," "," ","^"," "," "," "," "
 		},
+		traps = true,
 	},
 	-- hidden room
 	{
@@ -110,7 +111,7 @@ local room_types = {
 			" ","c"," ","c"," ","c"," ","c"," ",
 			" "," ","^"," ","^"," ","^"," ","^",
 		},
-		--traps = true,
+		traps = true,
 	},
 	-- plusses
 	{
@@ -126,7 +127,7 @@ local room_types = {
 			" "," ","c",">"," ","<","c"," "," ",
 			"c"," "," "," "," "," "," "," ","c",
 		},
-		--traps = true,
+		traps = true,
 	},
 	-- diamond
 	{
@@ -142,7 +143,6 @@ local room_types = {
 			"s","s","c"," "," "," ","c","s","s",
 			">","s","s","c","c","c","s","s","s",
 		},
-		--traps = true,
 	},
 	-- square
 	{
@@ -188,6 +188,7 @@ local room_types = {
 			"S","S","S","S","c",">"," "," "," ",
 			"S","S","S","S","S"," "," "," "," ",
 		},
+		traps = true,
 	},
 	-- hallway 4
 	{
@@ -263,7 +264,7 @@ local room_types = {
 			" "," "," "," "," "," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},
-		--traps = true,
+		traps = true,
 	},
 	-- pacman
 	{
@@ -279,21 +280,23 @@ local room_types = {
 			" "," "," "," "," "," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},
+		traps = true,
 	},
 	-- the wall
 	{
 		style = "yrepeat",
 		layout = {
 			"S","S","S","S","S","S","S"," ","<",
-			"c","c","c","c","c","c","S"," ","c",
+			"s","c","s","c","s","c","s"," ","c",
 			"c"," "," "," "," "," ","c"," ","<",
-			"c"," "," "," "," "," ","c"," ","c",
+			"s"," "," "," "," "," ","s"," ","c",
 			" "," "," "," "," ","<","c"," ","<",
-			"c"," "," "," "," "," ","c"," ","c",
+			"s"," "," "," "," "," ","s"," ","c",
 			"c"," "," "," "," "," ","c"," ","<",
-			"c","c","c","c","c","c","c"," ","c",
+			"s","c","s","c","s","c","s"," ","c",
 			"S","S","S","S","S","S","S"," ","<",
 		},
+		traps = true,
 	},
 	-- split
 	{
@@ -309,6 +312,7 @@ local room_types = {
 			" "," "," "," "," "," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},
+		traps = true,
 	},
 	-- 4 small pillars
 	{
@@ -324,6 +328,7 @@ local room_types = {
 			" "," "," "," ","v"," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},
+		traps = true,
 	},
 	-- 6 pillars
 	{
@@ -355,6 +360,7 @@ local room_types = {
 			" ","S"," ","S"," ","S"," ","S"," ",
 			" ","S","^","S","^","S","^","S","^",
 		},
+		traps = true,
 	},
 	-- inside
 	{
@@ -385,6 +391,7 @@ local room_types = {
 			" "," "," "," "," "," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},
+		traps = true,
 	},
 	-- 2 chests
 	{
@@ -446,6 +453,7 @@ local room_types = {
 			" "," "," "," "," "," "," "," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},
+		traps = true,
 	},
 	-- diamond 2
 	{
@@ -461,6 +469,7 @@ local room_types = {
 			"S"," "," "," ","c"," "," "," ","S",
 			"S","S"," "," "," "," "," ","S","S",
 		},
+		traps = true,
 	},
 	-- ultra pillars
 	{
@@ -491,6 +500,7 @@ local room_types = {
 			"S"," "," ","v"," "," ","v"," "," ",
 			"S"," "," "," "," "," "," "," "," ",
 		},
+		traps = true,
 	},
 	-- sides
 	{
@@ -522,7 +532,7 @@ local room_types = {
 			" "," ","v"," ","v"," ","v"," "," ",
 			" "," "," "," "," "," "," "," "," ",
 		},
-		--traps = true,
+		traps = true,
 	},
 	-- Ankh statue
 	{
@@ -1051,7 +1061,7 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 			end
 		end
 	end
-	if room.traps then
+	if room.traps and math.random(1,4) then
 		tsm_pyramids.make_traps(pos, stype, rotations, layout)
 	end
 	if sanded then

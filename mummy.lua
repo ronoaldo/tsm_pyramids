@@ -90,7 +90,6 @@ local MUMMY_DEF = {
 	envdmg_timer = 0,
 	attacker = "",
 	attacking_timer = 0,
-	mob_name = "mummy"
 }
 
 local spawner_DEF = {
@@ -104,7 +103,6 @@ local spawner_DEF = {
 	makes_footstep_sound = false,
 	timer = 0,
 	automatic_rotate = math.pi * 2.9,
-	m_name = "dummy"
 }
 
 spawner_DEF.on_activate = function(self)
@@ -377,7 +375,7 @@ minetest.register_node("tsm_pyramids:spawner_mummy", {
 	on_destruct = function(pos)
 		for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, 1)) do
 			if not obj:is_player() then 
-				if obj ~= nil and obj:get_luaentity().m_name == "dummy" then
+				if obj ~= nil and obj:get_luaentity().name == "tsm_pyramids:mummy_spawner" then
 					obj:remove()	
 				end
 			end
@@ -397,7 +395,7 @@ if not minetest.settings:get_bool("only_peaceful_mobs") then
 				if obj:is_player() then
 					player_near = true
 				else
-					if obj:get_luaentity() and obj:get_luaentity().mob_name == "mummy" then
+					if obj:get_luaentity() and obj:get_luaentity().name == "tsm_pyramids:mummy" then
 						mobs = mobs + 1
 					end
 				end

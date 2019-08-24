@@ -6,6 +6,8 @@ local PYRA_W = 23
 local PYRA_Wm = PYRA_W - 1
 -- Half of (Pyramid width minus 1)
 local PYRA_Wh = PYRA_Wm / 2
+-- Minimum spawn height
+local PYRA_MIN_Y = 3
 
 tsm_pyramids = {}
 
@@ -233,7 +235,7 @@ end
 
 
 minetest.register_on_generated(function(minp, maxp, seed)
-	if maxp.y < 0 then return end
+	if maxp.y < PYRA_MIN_Y then return end
 	math.randomseed(seed)
 	if not perlin1 then
 		perlin1 = minetest.get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
@@ -287,7 +289,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			sand = sands[sand_cnt_max_id]
 		end
 		if p2 == nil then return end
-		if p2.y < 0 then return end
+		if p2.y < PYRA_MIN_Y then return end
 
 		local off = 0
 		local opos1 = {x=p2.x+PYRA_Wm,y=p2.y-1,z=p2.z+PYRA_Wm}
@@ -307,8 +309,12 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		end
 		p2.y = p2.y - 3
 		p2 = limit(p2, maxp)
-		if p2.y < 0 then p2.y = 0 end
+		if p2.y < PYRA_MIN_Y then p2.y = PYRA_MIN_Y end
 		if minetest.find_node_near(p2, 5, {"default:water_source"}) ~= nil or
+				minetest.find_node_near(vector.add(p2, {x=PYRA_W, y=0, z=0}), 5, {"default:water_source"}) ~= nil or
+				minetest.find_node_near(vector.add(p2, {x=0, y=0, z=PYRA_W}), 5, {"default:water_source"}) ~= nil or
+				minetest.find_node_near(vector.add(p2, {x=PYRA_W, y=0, z=PYRA_W}), 5, {"default:water_source"}) ~= nil or
+
 				minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
 				minetest.find_node_near(p2, 52, {"default:sandstonebrick"}) ~= nil or
 				minetest.find_node_near(p2, 52, {"default:desert_sandstone_brick"}) ~= nil then

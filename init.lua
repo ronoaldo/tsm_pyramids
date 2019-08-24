@@ -310,14 +310,14 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		p2.y = p2.y - 3
 		p2 = limit(p2, maxp)
 		if p2.y < PYRA_MIN_Y then p2.y = PYRA_MIN_Y end
+		local middle = vector.add(p2, {x=PYRA_Wh, y=0, z=PYRA_Wh})
 		if minetest.find_node_near(p2, 5, {"default:water_source"}) ~= nil or
 				minetest.find_node_near(vector.add(p2, {x=PYRA_W, y=0, z=0}), 5, {"default:water_source"}) ~= nil or
 				minetest.find_node_near(vector.add(p2, {x=0, y=0, z=PYRA_W}), 5, {"default:water_source"}) ~= nil or
 				minetest.find_node_near(vector.add(p2, {x=PYRA_W, y=0, z=PYRA_W}), 5, {"default:water_source"}) ~= nil or
 
-				minetest.find_node_near(p2, 22, {"default:dirt_with_grass"}) ~= nil or
-				minetest.find_node_near(p2, 52, {"default:sandstonebrick"}) ~= nil or
-				minetest.find_node_near(p2, 52, {"default:desert_sandstone_brick"}) ~= nil then
+				minetest.find_node_near(middle, PYRA_W, {"default:dirt_with_grass"}) ~= nil or
+				minetest.find_node_near(middle, 52, {"default:sandstonebrick", "default:desert_sandstone_brick", "default:desert_stonebrick"}) ~= nil then
 			return
 		end
 

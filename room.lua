@@ -887,8 +887,9 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	else
 		column_style = math.random(0,4)
 	end
+	local layout
 	if room.style == "yrepeat" then
-		local layout = rotate_layout(room.layout, ROOM_WIDTH, rotations)
+		layout = rotate_layout(room.layout, ROOM_WIDTH, rotations)
 		for iy=0,4,1 do
 			for ix=0,8,1 do
 				for iz=0,8,1 do

@@ -181,37 +181,38 @@ local function make_pyramid(pos, brick, sandstone, stone, sand)
 end
 
 local function make(pos, brick, sandstone, stone, sand, ptype, room_id)
+	local bpos = table.copy(pos)
 	-- Build pyramid
-	make_pyramid(pos, brick, sandstone, stone, sand)
+	make_pyramid(bpos, brick, sandstone, stone, sand)
 
 	local rot = math.random(0, 3)
 	-- Build room
-	local ok, msg, flood_sand = tsm_pyramids.make_room(pos, ptype, room_id, rot)
+	local ok, msg, flood_sand = tsm_pyramids.make_room(bpos, ptype, room_id, rot)
 	-- Place mummy spawner
 	local r = math.random(1,3)
 	-- 4 possible spawner positions
 	local spawner_posses = {
 		-- front
-		{{x=pos.x+PYRA_Wh,y=pos.y+2, z=pos.z+5}, {x=0, y=0, z=2}},
+		{{x=bpos.x+PYRA_Wh,y=bpos.y+2, z=bpos.z+5}, {x=0, y=0, z=2}},
 		-- left
-		{{x=pos.x+PYRA_Wm-5,y=pos.y+2, z=pos.z+PYRA_Wh}, {x=-2, y=0, z=0}},
+		{{x=bpos.x+PYRA_Wm-5,y=bpos.y+2, z=bpos.z+PYRA_Wh}, {x=-2, y=0, z=0}},
 		-- back
-		{{x=pos.x+PYRA_Wh,y=pos.y+2, z=pos.z+PYRA_W-5}, {x=0, y=0, z=-2}},
+		{{x=bpos.x+PYRA_Wh,y=bpos.y+2, z=bpos.z+PYRA_W-5}, {x=0, y=0, z=-2}},
 		-- right
-		{{x=pos.x+5,y=pos.y+2, z=pos.z+PYRA_Wh}, {x=2, y=0, z=0}},
+		{{x=bpos.x+5,y=bpos.y+2, z=bpos.z+PYRA_Wh}, {x=2, y=0, z=0}},
 	}
 	-- Delete the spawner position in which the entrance will be placed
 	table.remove(spawner_posses, (rot % 4) + 1)
 	add_spawner(spawner_posses[r][1], spawner_posses[r][2])
 	-- Build entrance
-	make_entrance(pos, rot, brick, sand, flood_sand)
+	make_entrance(bpos, rot, brick, sand, flood_sand)
 	-- Done
-	minetest.log("action", "Created pyramid at ("..pos.x..","..pos.y..","..pos.z..")")
+	minetest.log("action", "Created pyramid at "..minetest.pos_to_string(bpos)..".")
 	return ok, msg
 end
 
 local perl1 = {SEED1 = 9130, OCTA1 = 3,	PERS1 = 0.5, SCAL1 = 250} -- Values should match minetest mapgen V6 desert noise.
-local perlin1
+local perlin1 -- perlin noise buffer
 
 local function hlp_fnct(pos, name)
 	local n = minetest.get_node_or_nil(pos)
@@ -222,21 +223,25 @@ local function hlp_fnct(pos, name)
 	end
 end
 local function ground(pos, old)
-	local p2 = pos
+	local p2 = table.copy(pos)
 	while hlp_fnct(p2, "air") do
 		p2.y = p2.y -1
 	end
 	if p2.y < old.y then
-		return p2
+		return {x=old.x, y=p2.y, z=old.z}
 	else
 		return old
 	end
 end
 
-
+-- Attempt to generate a pyramid in the generated area.
+-- Up to one pyramid per mapchunk.
 minetest.register_on_generated(function(minp, maxp, seed)
 	if maxp.y < PYRA_MIN_Y then return end
+
+	-- TODO: Use Minetests pseudo-random tools
 	math.randomseed(seed)
+
 	if not perlin1 then
 		perlin1 = minetest.get_perlin(perl1.SEED1, perl1.OCTA1, perl1.PERS1, perl1.SCAL1)
 	end
@@ -251,9 +256,15 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		pos.z = math.min(pos.z, maxp.z - PYRA_W+1)
 		return pos
 	end
-	local noise1 = perlin1:get_2d({x=minp.x,y=minp.y})--,z=minp.z})
+	local noise1 = perlin1:get_2d({x=minp.x,y=minp.y})
 
 	if noise1 > 0.25 or noise1 < -0.26 then
+		-- Need a bit of luck to place a pyramid
+		if math.random(0,10) > 7 then
+			minetest.log("verbose", "[tsm_pyramids]", "Pyramid not placed, bad dice roll. minp="..minetest.pos_to_string(minp))
+			return
+		end
+
 		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
 
 		local sands = {"default:sand", "default:desert_sand", "default:desert_stone"}
@@ -263,6 +274,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		local cnt = 0
 		local sand_cnt_max = 0
 		local sand_cnt_max_id
+		-- Look for sand or desert stone to place the pyramid on
 		for s=1, #sands do
 			cnt = 0
 			local sand_cnt = 0
@@ -285,31 +297,45 @@ minetest.register_on_generated(function(minp, maxp, seed)
 				end
 			end
 		end
+		if p2 == nil then
+			minetest.log("verbose", "[tsm_pyramids]", "Pyramid not placed, no suitable surface. minp="..minetest.pos_to_string(minp))
+			return
+		end
+		-- Select the material type by the most prominent node type
+		-- E.g. if desert sand is most prominent, we place a desert sandstone pyramid
 		if sand_cnt_max_id then
 			sand = sands[sand_cnt_max_id]
 		end
-		if p2 == nil then return end
-		if p2.y < PYRA_MIN_Y then return end
-
-		local off = 0
-		local opos1 = {x=p2.x+PYRA_Wm,y=p2.y-1,z=p2.z+PYRA_Wm}
-		local opos2 = {x=p2.x+PYRA_Wm,y=p2.y-1,z=p2.z}
-		local opos3 = {x=p2.x,y=p2.y-1,z=p2.z+PYRA_Wm}
-		local opos1_n = minetest.get_node_or_nil(opos1)
-		local opos2_n = minetest.get_node_or_nil(opos2)
-		local opos3_n = minetest.get_node_or_nil(opos3)
-		if opos1_n and opos1_n.name and opos1_n.name == "air" then
-			p2 = ground(opos1, p2)
+		if p2.y < PYRA_MIN_Y then
+			minetest.log("info", "[tsm_pyramids]", "Pyramid not placed, too deep. p2="..minetest.pos_to_string(p2))
+			return
 		end
-		if opos2_n and opos2_n.name and opos2_n.name == "air" then
-			p2 = ground(opos2, p2)
-		end
-		if opos3_n and opos3_n.name and opos3_n.name == "air" then
-			p2 = ground(opos3, p2)
-		end
-		p2.y = p2.y - 3
+		-- Now sink the pyramid until each corner of it is no longer floating in mid-air
 		p2 = limit(p2, maxp)
-		if p2.y < PYRA_MIN_Y then p2.y = PYRA_MIN_Y end
+		local oposses = {
+			{x=p2.x,y=p2.y-1,z=p2.z},
+			{x=p2.x+PYRA_W,y=p2.y-1,z=p2.z+PYRA_W},
+			{x=p2.x+PYRA_W,y=p2.y-1,z=p2.z},
+			{x=p2.x,y=p2.y-1,z=p2.z+PYRA_W},
+		}
+		for o=1, #oposses do
+			local opos = oposses[o]
+			local n = minetest.get_node_or_nil(opos)
+			if n and n.name and n.name == "air" then
+				local old = table.copy(p2)
+				p2 = ground(opos, p2)
+			end
+		end
+		-- Random bonus sinking
+		p2.y = math.max(p2.y - math.random(0,3), PYRA_MIN_Y)
+
+		-- Bad luck, we have hit the chunk border!
+		if p2.y < minp.y then
+			minetest.log("info", "[tsm_pyramids]", "Pyramid not placed, sunken too much. p2="..minetest.pos_to_string(p2))
+			return
+		end
+
+		-- Make sure the pyramid is not near a "killer" node, like water
 		local middle = vector.add(p2, {x=PYRA_Wh, y=0, z=PYRA_Wh})
 		if minetest.find_node_near(p2, 5, {"default:water_source"}) ~= nil or
 				minetest.find_node_near(vector.add(p2, {x=PYRA_W, y=0, z=0}), 5, {"default:water_source"}) ~= nil or
@@ -318,15 +344,15 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 				minetest.find_node_near(middle, PYRA_W, {"default:dirt_with_grass"}) ~= nil or
 				minetest.find_node_near(middle, 52, {"default:sandstonebrick", "default:desert_sandstone_brick", "default:desert_stonebrick"}) ~= nil then
+			minetest.log("info", "[tsm_pyramids]", "Pyramid not placed, inappropriate node nearby. p2="..minetest.pos_to_string(p2))
 			return
 		end
 
-		if math.random(0,10) > 7 then
-			return
-		end
+		-- Bonus chance to spawn a sandstone pyramid in v6 desert because otherwise they would be too rare in v6
 		if (mg_name == "v6" and sand == "default:desert_sand" and math.random(1, 2) == 1) then
 			sand = "default:sand"
 		end
+
 		-- Desert stone pyramids only generate in areas with almost no sand
 		if sand == "default:desert_stone" then
 			local nodes = minetest.find_nodes_in_area(vector.add(p2, {x=-1, y=-2, z=-1}), vector.add(p2, {x=PYRA_W+1, y=PYRA_Wh, z=PYRA_W+1}), {"group:sand"})
@@ -334,6 +360,8 @@ minetest.register_on_generated(function(minp, maxp, seed)
 				sand = "default:desert_sand"
 			end
 		end
+
+		-- Generate the pyramid!
 		if sand == "default:desert_sand" then
 			-- Desert sandstone pyramid
 			make(p2, "default:desert_sandstone_brick", "default:desert_sandstone", "default:desert_stone", "default:desert_sand", "desert_sandstone")

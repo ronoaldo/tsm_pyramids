@@ -335,7 +335,8 @@ minetest.register_on_generated(function(minp, maxp, seed)
 				minetest.find_node_near(vector.add(p2, {x=PYRA_W, y=0, z=PYRA_W}), 5, {"default:water_source"}) ~= nil or
 
 				minetest.find_node_near(middle, PYRA_W, {"default:dirt_with_grass"}) ~= nil or
-				minetest.find_node_near(middle, 52, {"default:sandstonebrick", "default:desert_sandstone_brick", "default:desert_stonebrick"}) ~= nil then
+				minetest.find_node_near(middle, 52, {"default:sandstonebrick", "default:desert_sandstone_brick", "default:desert_stonebrick"}) ~= nil or
+				minetest.find_node_near(middle, PYRA_Wh + 3, {"default:cactus", "group:leaves", "group:tree"}) ~= nil then
 			minetest.log("info", "[tsm_pyramids] Pyramid not placed, inappropriate node nearby. p2="..minetest.pos_to_string(p2))
 			return
 		end

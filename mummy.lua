@@ -1,5 +1,7 @@
 local S = minetest.get_translator("tsm_pyramids")
 
+local mod_cmi = minetest.get_modpath("cmi") ~= nil
+
 local mummy_walk_limit = 1
 local mummy_chillaxin_speed = 1
 local mummy_animation_speed = 10
@@ -92,6 +94,9 @@ local MUMMY_DEF = {
 	attacker = "",
 	attacking_timer = 0,
 
+	-- CMI stuff
+	-- Track last cause of damage for cmi.notify_die
+	last_damage_cause = { type = "unknown" },
 	_cmi_is_mob = true,
 }
 
@@ -130,7 +135,10 @@ spawner_DEF.on_punch = function(self, hitter)
 
 end
 
-MUMMY_DEF.on_activate = function(self)
+MUMMY_DEF.on_activate = function(self, staticdata, dtime_s)
+	if mod_cmi then
+		cmi.notify_activate(self, dtime_s)
+	end
 	mummy_update_visuals_def(self)
 	self.anim = get_animations()
 	self.object:set_animation({x=self.anim.stand_START,y=self.anim.stand_END}, mummy_animation_speed, mummy_animation_blend)
@@ -140,10 +148,18 @@ MUMMY_DEF.on_activate = function(self)
 	self.object:set_armor_groups({fleshy=130})
 end
 
-MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir)
-
+MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir, damage)
+	if mod_cmi then
+		cmi.notify_punch(self, puncher, time_from_last_punch, tool_capabilities, dir, damage)
+	end
 	self.attacker = puncher
 
+	if damage > 0 then
+		self.last_damage = {
+			type = "punch",
+			puncher = puncher,
+		}
+	end
 	if puncher ~= nil then
 		minetest.sound_play(sound_hit, {pos = self.object:get_pos(), loop = false, max_hear_distance = 10, gain = 0.4})
 		if time_from_last_punch >= 0.45 then
@@ -169,12 +185,15 @@ MUMMY_DEF.on_death = function(self, killer)
 		pos.y = pos.y + 1.0
 		minetest.add_item(pos, mummy_drop .. " " .. count)
 	end
+	if mod_cmi then
+		cmi.notify_die(self, self.last_damage)
+	end
 end
 
-	local cnt1 = 0
-	local cnt2 = 0
-
 MUMMY_DEF.on_step = function(self, dtime)
+	if mod_cmi then
+		cmi.notify_step(self, dtime)
+	end
 	self.timer = self.timer + 0.01
 	self.turn_timer = self.turn_timer + 0.01
 	self.jump_timer = self.jump_timer + 0.01
@@ -188,9 +207,11 @@ MUMMY_DEF.on_step = function(self, dtime)
 		self.time_passed = 0
 	end
 
+	-- Environment damage
 	local def = minetest.registered_nodes[current_node.name]
 	local dps = def.damage_per_second
 	local dmg = 0
+	local dmg_node, dmg_pos
 	if dps ~= nil and dps > 0 then
 		dmg = dps
 	end
@@ -212,6 +233,11 @@ MUMMY_DEF.on_step = function(self, dtime)
 		if self.envdmg_timer >= 1 then
 			self.envdmg_timer = 0
 			self.object:set_hp(self.object:get_hp()-dmg)
+			self.last_damage = {
+				type = "environment",
+				pos = current_pos,
+				node = current_node,
+			}
 			if self.object:get_hp() <= 0 then
 				if self.on_death then
 					self.on_death(self)

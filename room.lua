@@ -863,7 +863,7 @@ local function replace(str, iy, code_table, deco, column_style)
 	return code_table[str]
 end
 
-local function replace2(str, iy, depth, code_table)
+local function replace2(str, iy, depth, code_table, trap_node)
 	if iy == depth then
 		-- Sandstone at the bottom-most layer
 		str = "s"
@@ -873,9 +873,13 @@ local function replace2(str, iy, depth, code_table)
 	elseif iy == 0 and str == "~" then
 		-- Trap stones at the top layer
 		str = "t"
-	elseif iy < depth-3 and str == "~" then
-		-- Air below the trap stones
-		str = " "
+	elseif str == "~" then
+		if iy < depth-3 then
+			-- Air below the trap stones
+			str = " "
+		else
+			str = trap_node
+		end
 	end
 	-- Everything else is untouched (will stay pyramid material)
 
@@ -1109,10 +1113,18 @@ function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 	-- Depth is total depth of trap area:
 	-- * top layer with trap stones
 	-- * followed by air layers
-	-- * followed by 2 layer of lava
+	-- * followed by 2 layers of lava
 	-- * and 2 layers of sandstone/brick at the bottom (to prevent lava escaping)
 	-- The depth of air between trap stones and lava layer is <depth> - 4
-	local depth = 7
+	local deep_trap = math.random(1,2) == 1
+	local trap_node
+	if deep_trap then
+		trap_node = " "
+		depth = 14
+	else
+		trap_node = "~"
+		depth = 7
+	end
 	local wmin, wmax = -1,9
 	for iy=0,depth,1 do
 		for ix=wmin,wmax,1 do
@@ -1127,9 +1139,8 @@ function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 					end
 					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=n_str})
 				else
-					-- Walls below room
 					n_str = layout[ix*9+iz+1]
-					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, depth, code_table)})
+					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, depth, code_table, trap_node)})
 				end
 			end
 		end

@@ -422,6 +422,9 @@ function tsm_pyramids.attempt_mummy_spawn(pos, player_near_required)
 				for y=-1, -5, -1 do
 					npos.y = npos.y - 1
 					local below = minetest.get_node(npos)
+					if minetest.registered_items[below.name].liquidtype ~= "none" then
+						break
+					end
 					if below.name ~= "air" then
 						if y < -1 then
 							two_space = true

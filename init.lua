@@ -260,6 +260,54 @@ local function ground(pos, old)
 	end
 end
 
+-- Select the recommended type of pyramid to use, based on the environment.
+-- One of sandstone, desert sandstone, desert stone.
+local select_pyramid_type = function(minp, maxp)
+	local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
+
+	local sand
+	local sands = {"default:sand", "default:desert_sand", "default:desert_stone"}
+	local p2
+	local psand = {}
+	local sand
+	local cnt = 0
+	local sand_cnt_max = 0
+	local sand_cnt_max_id
+	-- Look for sand or desert stone to place the pyramid on
+	for s=1, #sands do
+		cnt = 0
+		local sand_cnt = 0
+		sand = sands[s]
+		psand[s] = minetest.find_node_near(mpos, 25, sand)
+		while cnt < 5 do
+			cnt = cnt+1
+			mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
+			local spos = minetest.find_node_near(mpos, 25, sand)
+			if spos ~= nil then
+				sand_cnt = sand_cnt + 1
+				if psand[s] == nil then
+					psand[s] = spos
+				end
+			end
+			if sand_cnt > sand_cnt_max then
+				sand_cnt_max = sand_cnt
+				sand_cnt_max_id = s
+				p2 = psand[s]
+			end
+		end
+	end
+
+	-- Select the material type by the most prominent node type
+	-- E.g. if desert sand is most prominent, we place a desert sandstone pyramid
+	if sand_cnt_max_id then
+		sand = sands[sand_cnt_max_id]
+	else
+		sand = nil
+		p2 = nil
+	end
+	return sand, p2
+end
+
 -- Attempt to generate a pyramid in the generated area.
 -- Up to one pyramid per mapchunk.
 minetest.register_on_generated(function(minp, maxp, seed)
@@ -290,39 +338,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			minetest.log("verbose", "[tsm_pyramids] Pyramid not placed, bad dice roll. minp="..minetest.pos_to_string(minp))
 			return
 		end
+		local sand, p2
+		sand, p2 = select_pyramid_type(minp, maxp)
 
-		local mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
-
-		local sands = {"default:sand", "default:desert_sand", "default:desert_stone"}
-		local p2
-		local psand = {}
-		local sand
-		local cnt = 0
-		local sand_cnt_max = 0
-		local sand_cnt_max_id
-		-- Look for sand or desert stone to place the pyramid on
-		for s=1, #sands do
-			cnt = 0
-			local sand_cnt = 0
-			sand = sands[s]
-			psand[s] = minetest.find_node_near(mpos, 25, sand)
-			while cnt < 5 do
-				cnt = cnt+1
-				mpos = {x=math.random(minp.x,maxp.x), y=math.random(minp.y,maxp.y), z=math.random(minp.z,maxp.z)}
-				local spos = minetest.find_node_near(mpos, 25, sand)
-				if spos ~= nil then
-					sand_cnt = sand_cnt + 1
-					if psand[s] == nil then
-						psand[s] = spos
-					end
-				end
-				if sand_cnt > sand_cnt_max then
-					sand_cnt_max = sand_cnt
-					sand_cnt_max_id = s
-					p2 = psand[s]
-				end
-			end
-		end
 		if p2 == nil then
 			minetest.log("verbose", "[tsm_pyramids] Pyramid not placed, no suitable surface. minp="..minetest.pos_to_string(minp))
 			return

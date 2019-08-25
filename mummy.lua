@@ -211,9 +211,16 @@ MUMMY_DEF.on_step = function(self, dtime)
 		if self.envdmg_timer >= 1 then
 			self.envdmg_timer = 0
 			self.object:set_hp(self.object:get_hp()-dmg)
-			hit(self)
-			self.sound_timer = 0
-			minetest.sound_play(sound_hit, {pos = current_pos, max_hear_distance = 10, gain = 0.4})
+			if self.object:get_hp() <= 0 then
+				if self.on_death then
+					self.on_death(self)
+				end
+				self.object:remove()
+			else
+				hit(self)
+				self.sound_timer = 0
+				minetest.sound_play(sound_hit, {pos = current_pos, max_hear_distance = 10, gain = 0.4})
+			end
 		end
 	 else
 		self.time_passed = 0

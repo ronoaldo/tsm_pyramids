@@ -98,6 +98,7 @@ local MUMMY_DEF = {
 	-- Track last cause of damage for cmi.notify_die
 	last_damage_cause = { type = "unknown" },
 	_cmi_is_mob = true,
+	description = S("Mummy"),
 }
 
 local spawner_DEF = {

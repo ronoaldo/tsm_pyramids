@@ -40,12 +40,16 @@ else
 	table.insert(chest_stuff, {name="farming:apple", max = 3})
 end
 
-function tsm_pyramids.fill_chest(pos, stype, flood_sand)
+function tsm_pyramids.fill_chest(pos, stype, flood_sand, treasure_chance)
 	local sand = "default:sand"
+	if not treasure_chance then
+		treasure_chance = 100
+	end
 	if stype == "desert_sandstone" or stype == "desert_stone" then
 		sand = "default:desert_sand"
 	end
 	local n = minetest.get_node(pos)
+	local treasure_added = false
 	if n and n.name and n.name == "default:chest" then
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
@@ -56,13 +60,14 @@ function tsm_pyramids.fill_chest(pos, stype, flood_sand)
 			table.insert(stacks, {name=sand, count = math.random(1,32)})
 		end
 		-- Add treasures
-		if math.random(1,10) >= 7 then
+		if math.random(1,100) <= treasure_chance then
 			if minetest.get_modpath("treasurer") ~= nil then
 				stacks = treasurer.select_random_treasures(3,7,9,{"minetool", "food", "crafting_component"})
 			else
 				for i=0,2,1 do
 					local stuff = chest_stuff[math.random(1,#chest_stuff)]
 					table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
+					treasure_added = true
 				end
 			end
 		end
@@ -72,6 +77,7 @@ function tsm_pyramids.fill_chest(pos, stype, flood_sand)
 			end
 		end
 	end
+	return treasure_added
 end
 
 local function add_spawner(pos, mummy_offset)

@@ -1054,11 +1054,19 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	if #chests > 0 then
 		-- Make at least 8 attempts to fill chests
 		local filled = 0
+		local chests_with_treasure = 0
 		while filled < 8 do
 			for c=1, #chests do
-				tsm_pyramids.fill_chest(chests[c], stype, sanded)
+				local has_treasure = tsm_pyramids.fill_chest(chests[c], stype, sanded, 30)
+				if has_treasure then
+					chests_with_treasure = chests_with_treasure + 1
+				end
 				filled = filled + 1
 			end
+		end
+		-- If no chests were filled with treasure so far, fill a random chest guaranteed
+		if chests_with_treasure == 0 then
+			tsm_pyramids.fill_chests(chests[math.random(1, #chests)], stype, sanded, 100)
 		end
 	end
 	if room.traps and math.random(1,4) then

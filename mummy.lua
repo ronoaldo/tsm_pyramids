@@ -91,6 +91,8 @@ local MUMMY_DEF = {
 	envdmg_timer = 0,
 	attacker = "",
 	attacking_timer = 0,
+
+	_cmi_is_mob = true,
 }
 
 local spawner_DEF = {

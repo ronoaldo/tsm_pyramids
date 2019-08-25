@@ -786,7 +786,6 @@ local room_types = {
 	},
 }
 
-local layout_traps
 local layout_traps_template = {
 	"S","S","S","S","S","S","S","S","S",
 	"?","?","?","?","?","?","?","?","S",
@@ -1073,7 +1072,7 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 			tsm_pyramids.fill_chest(chests[math.random(1, #chests)], stype, sanded, 100)
 		end
 	end
-	if room.traps and math.random(1,4) then
+	if room.traps and math.random(1,4) == 1 then
 		tsm_pyramids.make_traps(pos, stype, rotations, layout)
 	end
 	if sanded then
@@ -1082,8 +1081,7 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 	return true, nil, sanded
 end
 
-local shuffle_traps = function(chance, layout_room)
-	layout_traps = table.copy(layout_traps_template)
+local shuffle_traps = function(layout_traps, layout_room, chance)
 	for a=1, #layout_traps do
 		-- Delete trap if this space of the room is occupied
 		if layout_room[a] ~= " " then
@@ -1107,9 +1105,9 @@ function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 	elseif stype == "desert_stone" then
 		code_table = code_desert_stone
 	end
-	shuffle_traps(math.random(10,100), layout_room)
-	local hole = {x=pos.x+7,y=pos.y, z=pos.z+7}
-	local layout = rotate_layout(layout_traps, ROOM_WIDTH, rotations)
+	local layout_traps = table.copy(layout_traps_template)
+	layout_traps = rotate_layout(layout_traps, ROOM_WIDTH, rotations)
+	shuffle_traps(layout_traps, layout_room, math.random(10,100))
 	-- Depth is total depth of trap area:
 	-- * top layer with trap stones
 	-- * followed by air layers
@@ -1126,6 +1124,7 @@ function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 		depth = 7
 	end
 	local wmin, wmax = -1,9
+	local hole = {x=pos.x+7,y=pos.y, z=pos.z+7}
 	for iy=0,depth,1 do
 		for ix=wmin,wmax,1 do
 			for iz=wmin,wmax,1 do
@@ -1139,7 +1138,7 @@ function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 					end
 					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=n_str})
 				else
-					n_str = layout[ix*9+iz+1]
+					n_str = layout_traps[ix*9+iz+1]
 					minetest.set_node({x=hole.x+ix,y=hole.y-iy,z=hole.z+iz}, {name=replace2(n_str, iy, depth, code_table, trap_node)})
 				end
 			end

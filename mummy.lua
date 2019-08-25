@@ -370,11 +370,23 @@ minetest.register_craftitem("tsm_pyramids:spawn_egg", {
 	liquids_pointable = false,
 	stack_max = 99,
 	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.type == "node" then
-			minetest.add_entity(pointed_thing.above,"tsm_pyramids:mummy")
-			if not minetest.settings:get_bool("creative_mode") then itemstack:take_item() end
+		if pointed_thing.type ~= "node" then
 			return itemstack
 		end
+
+		-- am I clicking on something with existing on_rightclick function?
+		local node = minetest.get_node(pointed_thing.under)
+		if placer and not placer:get_player_control().sneak then
+			if minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].on_rightclick then
+				return minetest.registered_nodes[node.name].on_rightclick(pointed_thing.under, node, placer, itemstack) or itemstack
+			end
+		end
+
+		minetest.add_entity(pointed_thing.above,"tsm_pyramids:mummy")
+		if not minetest.settings:get_bool("creative_mode") then
+			itemstack:take_item()
+		end
+		return itemstack
 	end,
 
 })

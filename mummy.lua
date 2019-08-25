@@ -135,7 +135,6 @@ MUMMY_DEF.on_activate = function(self)
 	self.npc_anim = ANIM_STAND
 	self.object:set_acceleration({x=0,y=-20,z=0})--20
 	self.state = 1
-	self.object:set_hp(mummy_hp)
 	self.object:set_armor_groups({fleshy=130})
 end
 

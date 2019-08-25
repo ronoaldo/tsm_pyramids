@@ -143,9 +143,7 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 	self.attacker = puncher
 
 	if puncher ~= nil then
-		local sound = sound_hit
-		if self.object:get_hp() == 0 then sound = sound_dead end
-		minetest.sound_play(sound, {to_player = puncher:get_player_name(), loop = false, gain = 0.4})
+		minetest.sound_play(sound_hit, {pos = self.object:get_pos(), loop = false, max_hear_distance = 10, gain = 0.4})
 		if time_from_last_punch >= 0.45 then
 			hit(self)
 			self.direction = {x=self.object:get_velocity().x, y=self.object:get_velocity().y, z=self.object:get_velocity().z}
@@ -158,9 +156,16 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 			end
 		end
 	end
+end
 
-	if self.object:get_hp() == 0 then
-	    local obj = minetest.add_item(self.object:get_pos(), mummy_drop.." "..math.random(0,3))
+MUMMY_DEF.on_death = function(self, killer)
+	minetest.sound_play(sound_dead, {pos = self.object:get_pos(), max_hear_distance = 10 , gain = 0.3})
+	-- Drop item on death
+	local count = math.random(0,3)
+	if count > 0 then
+		local pos = self.object:get_pos()
+		pos.y = pos.y + 1.0
+		minetest.add_item(pos, mummy_drop .. " " .. count)
 	end
 end
 
@@ -182,7 +187,6 @@ MUMMY_DEF.on_step = function(self, dtime)
 	end
 
 	if self.object:get_hp() == 0 then
-		minetest.sound_play(sound_dead, {pos = current_pos, max_hear_distance = 10 , gain = 0.3})
 		self.object:remove()
 	end
 	local def = minetest.registered_nodes[current_node.name]
@@ -211,7 +215,7 @@ MUMMY_DEF.on_step = function(self, dtime)
 			self.object:set_hp(self.object:get_hp()-dmg)
 			hit(self)
 			self.sound_timer = 0
-			minetest.sound_play(sound_hit, {pos = current_pos, max_hear_distance = 10, gain = 0.3})
+			minetest.sound_play(sound_hit, {pos = current_pos, max_hear_distance = 10, gain = 0.4})
 		end
 	 else
 		self.time_passed = 0

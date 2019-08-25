@@ -18,26 +18,51 @@ dofile(minetest.get_modpath("tsm_pyramids").."/room.lua")
 local mg_name = minetest.get_mapgen_setting("mg_name")
 
 local chest_stuff = {
-	{name="default:apple", max = 3},
-	{name="default:steel_ingot", max = 3},
-	{name="default:copper_ingot", max = 3},
-	{name="default:gold_ingot", max = 2},
-	{name="default:diamond", max = 1},
-	{name="default:pick_steel", max = 1},
-	{name="default:pick_diamond", max = 1},
+	normal = {
+		{name="default:steel_ingot", max = 3},
+		{name="default:copper_ingot", max = 3},
+		{name="default:gold_ingot", max = 2},
+		{name="default:diamond", max = 1},
+		{name="default:pick_steel", max = 1},
+	},
+	desert_stone = {
+		{name="default:mese_crystal", max = 4},
+		{name="default:gold_ingot", max = 10},
+		{name="default:pick_diamond", max = 1},
+	},
+	desert_sandstone = {
+		{name="default:apple", max = 1},
+		{name="default:stick", max = 64},
+		{name="default:acacia_bush_sapling", max = 1},
+		{name="default:paper", max = 9},
+		{name="default:shovel_bronze", max = 1},
+		{name="default:pick_mese", max = 1},
+	},
+	sandstone = {
+		{name="default:obsidian_shard", max = 5},
+		{name="default:apple", max = 3},
+		{name="default:blueberries", max = 9},
+		{name="default:glass", max = 64},
+		{name="default:bush_sapling", max = 1},
+		{name="default:pick_bronze", max = 1},
+	},
 }
 
 if minetest.get_modpath("farming") then
-	table.insert(chest_stuff, {name="farming:bread", max = 3})
-	table.insert(chest_stuff, {name="farming:cotton", max = 8})
+	table.insert(chest_stuff.desert_sandstone, {name="farming:bread", max = 3})
+	table.insert(chest_stuff.sandstone, {name="farming:bread", max = 4})
+	table.insert(chest_stuff.normal, {name="farming:cotton", max = 32})
+	table.insert(chest_stuff.desert_sandstone, {name="farming:seed_cotton", max = 3})
+	table.insert(chest_stuff.desert_sandstone, {name="farming:hoe_stone", max = 1})
 else
-	table.insert(chest_stuff, {name="farming:apple", max = 8})
-	table.insert(chest_stuff, {name="farming:apple", max = 3})
+	table.insert(chest_stuff.normal, {name="farming:apple", max = 8})
+	table.insert(chest_stuff.normal, {name="farming:apple", max = 3})
 end
 if minetest.get_modpath("tnt") then
-	table.insert(chest_stuff, {name="tnt:gunpowder", max = 6})
+	table.insert(chest_stuff.normal, {name="tnt:gunpowder", max = 6})
+	table.insert(chest_stuff.desert_stone, {name="tnt:gunpowder", max = 6})
 else
-	table.insert(chest_stuff, {name="farming:apple", max = 3})
+	table.insert(chest_stuff.normal, {name="farming:apple", max = 3})
 end
 
 function tsm_pyramids.fill_chest(pos, stype, flood_sand, treasure_chance)
@@ -65,10 +90,14 @@ function tsm_pyramids.fill_chest(pos, stype, flood_sand, treasure_chance)
 				stacks = treasurer.select_random_treasures(3,7,9,{"minetool", "food", "crafting_component"})
 			else
 				for i=0,2,1 do
-					local stuff = chest_stuff[math.random(1,#chest_stuff)]
+					local stuff = chest_stuff.normal[math.random(1,#chest_stuff.normal)]
 					table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
-					treasure_added = true
 				end
+				if math.random(1,100) <= 75 then
+					local stuff = chest_stuff[stype][math.random(1,#chest_stuff[stype])]
+					table.insert(stacks, {name=stuff.name, count = math.random(1,stuff.max)})
+				end
+				treasure_added = true
 			end
 		end
 		for s=1,#stacks do

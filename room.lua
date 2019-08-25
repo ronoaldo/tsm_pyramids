@@ -1066,7 +1066,7 @@ function tsm_pyramids.make_room(pos, stype, room_id, rotations)
 		end
 		-- If no chests were filled with treasure so far, fill a random chest guaranteed
 		if chests_with_treasure == 0 then
-			tsm_pyramids.fill_chests(chests[math.random(1, #chests)], stype, sanded, 100)
+			tsm_pyramids.fill_chest(chests[math.random(1, #chests)], stype, sanded, 100)
 		end
 	end
 	if room.traps and math.random(1,4) then

@@ -70,6 +70,7 @@ local function mummy_update_visuals_def(self)
 end
 
 local MUMMY_DEF = {
+	hp_max = mummy_hp,
 	physical = true,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
@@ -186,9 +187,6 @@ MUMMY_DEF.on_step = function(self, dtime)
 		self.time_passed = 0
 	end
 
-	if self.object:get_hp() == 0 then
-		self.object:remove()
-	end
 	local def = minetest.registered_nodes[current_node.name]
 	local dps = def.damage_per_second
 	local dmg = 0

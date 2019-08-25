@@ -1,6 +1,6 @@
 # Pyramids (with Treasurer support) [`tsm_pyramids`]
 
-* Version: 0.7
+* Version: 0.8
 
 ## Description
 This is a mod for Minetest Game which adds randomly spawned pyramids in deserts and

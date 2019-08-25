@@ -25,7 +25,6 @@ local chest_stuff = {
 	{name="default:diamond", max = 1},
 	{name="default:pick_steel", max = 1},
 	{name="default:pick_diamond", max = 1},
-	{name="default:papyrus", max = 9},
 }
 
 if minetest.get_modpath("farming") then

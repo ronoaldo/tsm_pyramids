@@ -1118,10 +1118,8 @@ function tsm_pyramids.make_traps(pos, stype, rotations, layout_room)
 	local trap_node
 	if deep_trap then
 		trap_node = " "
-		depth = 14
 	else
 		trap_node = "~"
-		depth = 7
 	end
 	local wmin, wmax = -1,9
 	local hole = {x=pos.x+7,y=pos.y, z=pos.z+7}

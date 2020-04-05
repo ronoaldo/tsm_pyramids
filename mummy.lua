@@ -162,7 +162,7 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 		}
 	end
 	if puncher ~= nil then
-		minetest.sound_play(sound_hit, {pos = self.object:get_pos(), loop = false, max_hear_distance = 10, gain = 0.4}, false)
+		minetest.sound_play(sound_hit, {pos = self.object:get_pos(), loop = false, max_hear_distance = 10, gain = 0.4}, true)
 		if time_from_last_punch >= 0.45 then
 			hit(self)
 			self.direction = {x=self.object:get_velocity().x, y=self.object:get_velocity().y, z=self.object:get_velocity().z}
@@ -178,7 +178,7 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 end
 
 MUMMY_DEF.on_death = function(self, killer)
-	minetest.sound_play(sound_dead, {pos = self.object:get_pos(), max_hear_distance = 10 , gain = 0.3}, false)
+	minetest.sound_play(sound_dead, {pos = self.object:get_pos(), max_hear_distance = 10 , gain = 0.3}, true)
 	-- Drop item on death
 	local count = math.random(0,3)
 	if count > 0 then
@@ -247,7 +247,7 @@ MUMMY_DEF.on_step = function(self, dtime)
 			else
 				hit(self)
 				self.sound_timer = 0
-				minetest.sound_play(sound_hit, {pos = current_pos, max_hear_distance = 10, gain = 0.4}, false)
+				minetest.sound_play(sound_hit, {pos = current_pos, max_hear_distance = 10, gain = 0.4}, true)
 			end
 		end
 	 else
@@ -266,7 +266,7 @@ MUMMY_DEF.on_step = function(self, dtime)
 
 	--play sound
 	if self.sound_timer > math.random(5,35) then
-		minetest.sound_play(sound_normal, {pos = current_pos, max_hear_distance = 10, gain = 0.2}, false)
+		minetest.sound_play(sound_normal, {pos = current_pos, max_hear_distance = 10, gain = 0.2}, true)
 		self.sound_timer = 0
 	end
 

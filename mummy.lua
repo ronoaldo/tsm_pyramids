@@ -128,6 +128,7 @@ spawner_DEF.on_step = function(self, dtime)
 	if self.timer > 1 then
 		if n and n.name and n.name ~= "tsm_pyramids:spawner_mummy" then
 			self.object:remove()
+			return
 		end
 	end
 end
@@ -244,6 +245,7 @@ MUMMY_DEF.on_step = function(self, dtime)
 					self.on_death(self)
 				end
 				self.object:remove()
+				return
 			else
 				hit(self)
 				self.sound_timer = 0

@@ -49,15 +49,11 @@ local ANIM_WALK_MINE = 5
 local ANIM_MINE = 6
 
 local function hit(self)
-	local prop = {
-		mesh = mummy_mesh,
-		textures = {"tsm_pyramids_mummy.png^tsm_pyramids_hit.png"},
-	}
-	self.object:set_properties(prop)
+	self.object:set_texture_mod("^tsm_pyramids_hit.png")
 	minetest.after(0.4, function(self)
 		local prop = {textures = mummy_texture,}
 		if self ~= nil and self.object ~= nil then
-			self.object:set_properties(prop)
+			self.object:set_texture_mod("")
 		end
 	end, self)
 end
@@ -65,7 +61,6 @@ end
 local function mummy_update_visuals_def(self)
 	npc_anim = 0 -- Animation will be set further below immediately
 	local prop = {
-		mesh = mummy_mesh,
 		textures = mummy_texture,
 	}
 	self.object:set_properties(prop)

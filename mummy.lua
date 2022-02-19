@@ -151,7 +151,7 @@ MUMMY_DEF.on_punch = function(self, puncher, time_from_last_punch, tool_capabili
 	end
 	self.attacker = puncher
 
-	if damage > 0 then
+	if damage and damage > 0 then
 		self.last_damage = {
 			type = "punch",
 			puncher = puncher,
